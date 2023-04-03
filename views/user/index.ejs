@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="flex flex-wrap">
+            <aside class="w-64 border-r-2 border-gray-400 h-screen fixed left-2 p-4 pt-32">
+                <div>
+                    <ul class="font-medium">
+                        <li class="my-4"><a href="/">Popular Topics</a></li>
+                        <li class="my-4"><a href="/">New Topics</a></li>
+                        <li class="my-4">
+                            <input type="text" name="" id="" placeholder="Search" class="bg-gray-200 rounded pl-2 py-1">
+                        </li>
+                        <% if (typeof isAuth !="undefined" ) { %>
+                            <li class="mt-12"><a href="/">My Friends</a></li>
+                            <li class="mt-96"><a href="/">Settings</a></li>
+                            <% } %>
+                    </ul>
+                </div>
+            </aside>
+            <div class="z-10 w-full">
+                <%- include('../partials/navbar') %>
+            </div>
+            <div class="flex-grow ml-64 px-10 mt-14 ">
+
+                <div class="min-h-[85vh]">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos aperiam iusto, eaque fugiat
+                    obcaecati
+                    laboriosam et blanditiis quo veniam nobis tenetur, quod sit. Provident ab quibusdam aliquam
+                    minus
+                    fugiat deserunt?
+                </div>
+                <div>
+                    <%- include('../partials/footer') %>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
