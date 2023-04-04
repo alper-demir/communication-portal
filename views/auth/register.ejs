@@ -25,6 +25,13 @@
 
                         <div class="relative my-2">
                             <input type="text" class="px-2 py-2 peer w-64 outline-cyan-600 border-2 rounded"
+                                name="username" placeholder="Username"
+                                value="<% if (typeof username != "undefined") { %><%= username %><% } %>">
+
+                        </div>
+
+                        <div class="relative my-2">
+                            <input type="text" class="px-2 py-2 peer w-64 outline-cyan-600 border-2 rounded"
                                 name="email" placeholder="Email"
                                 value="<% if (typeof email != "undefined") { %><%= email %><% } %>">
 

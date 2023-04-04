@@ -11,7 +11,7 @@ router.get("/register", (req, res) => {
 })
 
 router.post("/register", async (req, res) => {
-    const { name, lastname, email, password } = req.body || null;
+    const { name, lastname, username, email, password } = req.body || null;
     try {
         const user = await User.findOne({
             where: {
@@ -20,7 +20,7 @@ router.post("/register", async (req, res) => {
         })
 
         if (!user) {
-            await User.create({ firstName: name, lastName: lastname, email: email, password: await bcrypt.hash(password, 10) })
+            await User.create({ firstName: name, lastName: lastname, userName: username, email: email, password: await bcrypt.hash(password, 10) })
             return res.redirect("/auth/login")
         }
         return res.render("auth/register", {
@@ -31,6 +31,7 @@ router.post("/register", async (req, res) => {
             },
             name: name,
             lastname: lastname,
+            username: username,
             email: email,
             password: password
 
@@ -84,6 +85,7 @@ router.post("/login", async (req, res) => {
         }
         req.session.isAuth = true
         req.session.image = user.image
+        req.session.username = user.userName
         console.log("auth: " + req.session.isAuth)
         return res.redirect("/")
     }
@@ -98,7 +100,7 @@ router.get("/logout", async (req, res) => {
         delete req.session.isAuth
         res.redirect("/auth/login")
     }
-    
+
     catch (err) {
         console.log(err);
     }

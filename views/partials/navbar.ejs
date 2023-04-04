@@ -1,5 +1,5 @@
 <nav class="w-full bg-gradient-to-r from-indigo-50 to-blue-100 font-medium">
-    <div class="flex items-center justify-between mx-auto flex-nowrap max-w-screen-lg p-4">
+    <div class="flex items-center justify-between mx-auto flex-nowrap max-w-screen-lg p-4  h-20">
         <div class="text-xl font-semibold dark:text-white">
             <a href="/">Commtal</a>
         </div>
@@ -19,7 +19,7 @@
                 </a>
                 <% if (typeof image !="undefined" ) { %>
                     <img src="../../public/images/<%= image %>" alt=""
-                        class=" h-12 w-12  rounded-full ml-3 ring-2 ring-cyan-400">
+                        class=" h-12 w-12  rounded-full ml-3 ring-2 ring-cyan-400 object-cover">
                     <% } %>
             </div>
             <% } else{ %>

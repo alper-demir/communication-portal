@@ -11,6 +11,11 @@ const User = sequelize.define('users', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    userName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -22,7 +27,13 @@ const User = sequelize.define('users', {
     },
     image: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
+        defaultValue: "default.jpg"
+    },
+    online: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 });
 
