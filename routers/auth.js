@@ -86,6 +86,7 @@ router.post("/login", async (req, res) => {
         req.session.isAuth = true
         req.session.image = user.image
         req.session.username = user.userName
+        req.session.userid = user.id
         console.log("auth: " + req.session.isAuth)
         return res.redirect("/")
     }
