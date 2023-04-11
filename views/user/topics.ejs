@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+
+    <style>
+        section:last-child {
+            border: none;
+        }
+    </style>
+
+    <body>
+        <%- include('../partials/navbar') %>
+            <div class="min-h-[85vh]">
+                <% if (typeof isAuth !="undefined") { %>
+                <div class="w-3/5 mx-auto p-2 mt-5">
+                    <button onclick="starttopic()"
+                        class="px-2 py-1 bg-red-300 text-white rounded mx-auto p-2 mt-5">Start a topic</button>
+                </div>
+                <% } %>
+                <form method="post" id="topiccreate" class="hidden w-3/5 mx-auto p-2 mt-5">
+                    <div class="relative my-2">
+                        <input type="text" class="px-2 py-2 peer w-full outline-cyan-600 border-2 rounded" name="title"
+                            placeholder="Title">
+                    </div>
+                    <div class="relative my-2">
+                        <textarea id="editor"
+                            class="w-full resize-none border-2 border-gray-300 rounded focus:outline-gray-500 p-2"
+                            name="content" id="" cols="120" rows="10" placeholder="Content"></textarea>
+                    </div>
+                    <button type="submit" class="px-2 py-1 bg-blue-800 rounded text-white hover:-translate-y-[2px] transition-all">Create</button>
+                </form>
+
+                <div class="w-3/5 mx-auto mt-20 border-2 border-red-300 rounded">
+                    <% topics.forEach(topic=> { %>
+                        <section class="flex justify-between border-b-2 border-red-300">
+                            <div class="flex items-center">
+                                <div class="p-3 text-center min-w-[13rem] max-w-[13rem]">
+                                    <div class="flex flex-col items-center">
+                                        <a href="/user/<%= topic.user.id %>"> <img src="../../public/images/<%= topic.user.image %>" alt=""
+                                                class="object-cover h-12 w-12 rounded-full my-2 ring-2 ring-green-400 max-md:h-12 max-md:w-12"></a>
+                                        <span class="text-xs">
+                                            <%= topic.user.firstName %>
+                                                <%= topic.user.lastName %>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="font-semibold">
+                                    <a href="/topic/<%= topic.id %>">
+                                        <%= topic.title %>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex flex-col justify-center pr-8 border-l-2 border-red-300 h-full">
+                                    <div class="flex justify-between">
+                                        <div class="px-4">Views:</div>
+                                        <div>
+                                            <%= topic.views %>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <div class="px-4">Messages:</div>
+                                        <div>
+                                            <%= topic.messages %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <% }) %>
+
+                </div>
+            </div>
+            <div>
+                <%- include('../partials/footer') %>
+            </div>
+    </body>
+
+    <script>
+        function starttopic() {
+            const topiccreate = document.getElementById("topiccreate")
+            if (topiccreate.classList.contains("hidden")) {
+                topiccreate.classList.add("block")
+                topiccreate.classList.remove("hidden")
+            }
+            else {
+                topiccreate.classList.remove("block")
+                topiccreate.classList.add("hidden")
+            }
+        }
+    </script>
+<%- include('../partials/ck-editor') %>
+</html>

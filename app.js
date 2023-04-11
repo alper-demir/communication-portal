@@ -30,9 +30,11 @@ app.use("/auth", authRoutes)
 app.use("/", userRoutes)
 
 const sequelize = require("./data/db")
-const User = require("./models/user")
 const testData = require("./data/test-data")
 
+
+// Topic.belongsTo(User)
+// User.hasMany(Topic)
 
 
 async function sync() {
