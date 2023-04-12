@@ -32,19 +32,12 @@ app.use("/", userRoutes)
 const sequelize = require("./data/db")
 const testData = require("./data/test-data")
 
-
-// Topic.belongsTo(User)
-// User.hasMany(Topic)
-
-
 async function sync() {
     await sequelize.sync({ force: true })
     await testData()
 }
 
 sync()
-
-
 
 app.listen(process.env.PORT, () => {
     console.log("sunucu 3000 de aktif")

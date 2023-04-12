@@ -21,6 +21,21 @@ const testData = async () => {
         { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 5, views: 15, messages: 0, },
         { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 6, views: 16, messages: 2, },
     ])
+
+    await Comment.bulkCreate([
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 1, userId: 1 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 2, userId: 2 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 3, userId: 3 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 4, userId: 4 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 5, userId: 5 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 6, userId: 6 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 5, userId: 1 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 1, userId: 2 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 4, userId: 3 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 2, userId: 6 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 6, userId: 4 },
+        { content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis porro soluta vitae eius cupiditate doloremque veritatis illo! Nulla, animi ipsa.", topicId: 3, userId: 2 }
+    ])
 }
 
 
@@ -29,4 +44,7 @@ User.hasMany(Topic, { foreignKey: 'userId' })
 
 Topic.hasMany(Comment, { foreignKey: 'topicId' })
 Comment.belongsTo(Topic, { foreignKey: 'topicId' })
+
+Comment.belongsTo(User)
+User.hasMany(Comment)
 module.exports = testData

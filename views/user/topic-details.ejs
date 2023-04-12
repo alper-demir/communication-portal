@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" class="html">
+
+<%- include('../partials/head') %>
+    <body>
+        <div class="px-10 mt-14 ">
+            <div class="min-h-[85vh]">
+                <div class="w-3/5 mx-auto p-2 mt-5">
+                    <h4 class="font-bold text-2xl">
+                        <%= comments[0].topic.title %>
+                    </h4>
+                    <small><span class="text-xs"><%= comments[0].topic.user.firstName %> <%= comments[0].topic.user.lastName %> / <%= date %></span></small>
+                </div>
+                <% for( let index=0; index < comments.length; index++ ) { %>
+                    <div class="w-3/5 mx-auto overflow-hidden p-1">
+                        <section class="flex justify-center border-2 border-indigo-400 rounded">
+                            <aside class="border-r-2 border-indigo-400 p-6 text-center min-w-[13rem] max-w-[13rem]">
+                                <div class="flex flex-col items-center">
+                                    <img src="../../public/images/<%= comments[index].user.image %>" alt=""
+                                        class="object-cover h-24 w-24 rounded-full my-2 ring-2 ring-green-400 max-md:h-12 max-md:w-12">
+                                    <span class="text-sm"><%= comments[index].user.firstName %> <%= comments[index].user.lastName %></span>
+                                    <small class="text-gray-500 font-medium">
+                                        @<%= comments[index].user.userName %>
+                                    </small>
+                                </div>
+                            </aside>
+                            <div class="flex flex-col">
+                                <div class="border-b-2 border-indigo-400 text-end flex justify-between p-2 items-center">
+                                    <div class="text-xs"><%= comments[index].createdAt.toLocaleString() %></div>
+                                    <div>#<%= index + 1 %></div>
+                                </div>
+                                <div class="p-5">
+                                    <%= comments[index].content %>
+                                </div>
+                            </div>
+                            <!-- <div class="w-full px-5 py-10 relative">
+                                <div class="absolute top-1 right-2">
+                                    #<%= index + 1 %>
+                                </div>
+                                <div>
+                                    <%= comments[index].content %>
+                                </div>
+                            </div> -->
+                        </section>
+                    </div>
+                    <% } %>
+
+
+            </div>
+            <div>
+                <%- include('../partials/footer') %>
+            </div>
+        </div>
+    </body>
+    <script>
+
+        function changeColorMode() {
+            const color = document.getElementById("colormode");
+            const colorIcon = document.getElementById("coloricon");
+            const htmlTag = document.querySelector(".html")
+            if (colorIcon.classList.contains("fa-sharp")) {
+                colorIcon.classList.remove("fa-sharp")
+                colorIcon.classList.remove("fa-solid")
+                colorIcon.classList.add("fa-regular")
+                htmlTag.classList.remove("dark")
+            }
+            else {
+                colorIcon.classList.add("fa-sharp")
+                colorIcon.classList.add("fa-solid")
+                colorIcon.classList.remove("fa-regular")
+                htmlTag.classList.add("dark")
+            }
+        }
+
+    </script>
+
+
+</html>

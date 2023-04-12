@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require("../data/db")
 
-const Comment = sequelize.define('Comment', {
+const Comment = sequelize.define('comments', {
   content: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -12,6 +12,10 @@ const Comment = sequelize.define('Comment', {
     defaultValue: 0,
   },
   topicId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false
   }

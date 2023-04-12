@@ -45,4 +45,34 @@ router.post("/topics", async (req, res) => {
     }
 })
 
+router.get("/topic/:id", async (req, res) => {
+    const topicId = req.params.id
+
+    const comments = await Comment.findAll({
+        where: {
+            topicId: topicId
+        },
+        include: [
+            {
+                model: Topic, include: {
+                    model: User,
+                    attributes: ['firstName', 'lastName']
+                },
+                attributes: ['title', 'createdAt']
+            },
+            { model: User, attributes: ['userName', 'image','firstName','lastName'] }
+        ]
+    })
+    console.log(comments)
+    const date = new Date(comments[0].topic.createdAt)
+    const day = date.getDate()
+    const month = date.toLocaleString('en-GB', { month: 'long' })
+    const year = date.getFullYear()
+    const formattedDate = `${day} ${month} ${year} - ${date.toLocaleTimeString("tr-TR")}`
+    res.render("user/topic-details", {
+        title: "title",
+        comments: comments,
+        date: formattedDate
+    })
+})
 module.exports = router
