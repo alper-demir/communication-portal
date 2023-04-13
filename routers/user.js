@@ -34,19 +34,29 @@ router.post("/topics", async (req, res) => {
             title: title,
             userId: req.session.userid
         })
+        console.log("topicid" + createdTopic.id)
         await Comment.create({
             content: content,
-            topicId: createdTopic.id
+            topicId: createdTopic.id,
+            userId: req.session.userid
         })
+        await Topic.increment('messages', { by: 1, where: { id: createdTopic.id } });
         res.redirect("/topics")
     }
     catch (error) {
-        console.log("Error occured during topic creation")
+        console.log("Error occured during topic creation:", error)
     }
 })
 
 router.get("/topic/:id", async (req, res) => {
     const topicId = req.params.id
+
+    let visitedTopics = req.cookies.visited_topics || [];
+    if (!visitedTopics.includes(topicId)) {
+        Topic.increment('views', { where: { id: topicId } });
+        visitedTopics.push(topicId);
+        res.cookie('visited_topics', visitedTopics, { maxAge: 1000 * 60 * 60 }); // 60 min
+    }
 
     const comments = await Comment.findAll({
         where: {
@@ -56,11 +66,11 @@ router.get("/topic/:id", async (req, res) => {
             {
                 model: Topic, include: {
                     model: User,
-                    attributes: ['firstName', 'lastName']
+                    attributes: ['firstName', 'lastName',]
                 },
-                attributes: ['title', 'createdAt']
+                attributes: ['title', 'createdAt', 'id']
             },
-            { model: User, attributes: ['userName', 'image','firstName','lastName'] }
+            { model: User, attributes: ['userName', 'image', 'firstName', 'lastName'] }
         ]
     })
     console.log(comments)
@@ -70,9 +80,24 @@ router.get("/topic/:id", async (req, res) => {
     const year = date.getFullYear()
     const formattedDate = `${day} ${month} ${year} - ${date.toLocaleTimeString("tr-TR")}`
     res.render("user/topic-details", {
-        title: "title",
+        title: comments[0].topic.title,
         comments: comments,
         date: formattedDate
     })
+})
+
+router.post("/topic/:id", async (req, res) => {
+    const { content, topicid } = req.body
+
+    try {
+        if (topicid == req.params.id) {
+            await Comment.create({ content: content, userId: req.session.userid, topicId: topicid })
+            await Topic.increment('messages', { by: 1, where: { id: topicid } });
+            res.redirect(`/topic/${topicid}`)
+        }
+    }
+    catch (error) {
+        console.log("Error occured during comment addition" + error)
+    }
 })
 module.exports = router

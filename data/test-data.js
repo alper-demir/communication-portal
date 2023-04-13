@@ -14,12 +14,12 @@ const testData = async () => {
     ])
 
     await Topic.bulkCreate([
-        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 1, views: 10, messages: 2, },
-        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 2, views: 12, messages: 1, },
-        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 3, views: 13, messages: 4, },
-        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 4, views: 14, messages: 7, },
-        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 5, views: 15, messages: 0, },
-        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 6, views: 16, messages: 2, },
+        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 1 },
+        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 2 },
+        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 3 },
+        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 4 },
+        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 5 },
+        { title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.", userId: 6 },
     ])
 
     await Comment.bulkCreate([
@@ -38,6 +38,7 @@ const testData = async () => {
     ])
 }
 
+// Relations
 
 Topic.belongsTo(User, { foreignKey: 'userId' }) // bunları belirtmesekte otomatik olarak kendisi user ve id kelimeleri ile kendi algoritmasını kullanarak ilişkiyi kuruyor
 User.hasMany(Topic, { foreignKey: 'userId' })
@@ -47,4 +48,5 @@ Comment.belongsTo(Topic, { foreignKey: 'topicId' })
 
 Comment.belongsTo(User)
 User.hasMany(Comment)
+
 module.exports = testData

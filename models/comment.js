@@ -3,7 +3,7 @@ const sequelize = require("../data/db")
 
 const Comment = sequelize.define('comments', {
   content: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   likes: {

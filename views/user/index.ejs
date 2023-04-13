@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="html">
+<html lang="en">
 
 <%- include('../partials/head') %>
 
@@ -51,11 +51,6 @@
             <div class="flex-grow ml-64 px-10 mt-14 ">
 
                 <div class="min-h-[85vh]">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos aperiam iusto, eaque fugiat
-                    obcaecati
-                    laboriosam et blanditiis quo veniam nobis tenetur, quod sit. Provident ab quibusdam aliquam
-                    minus
-                    fugiat deserunt?
                     <!--Topics-->
                     <div class="w-9/12 mx-auto p-2 mt-5">
                         <button onclick="starttopic()"
@@ -190,7 +185,7 @@
         function changeColorMode() {
             const color = document.getElementById("colormode");
             const colorIcon = document.getElementById("coloricon");
-            const htmlTag = document.querySelector(".html")
+            const htmlTag = document.querySelector("html")
             if (colorIcon.classList.contains("fa-sharp")) {
                 colorIcon.classList.remove("fa-sharp")
                 colorIcon.classList.remove("fa-solid")
