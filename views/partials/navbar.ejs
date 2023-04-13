@@ -1,5 +1,5 @@
-<nav class="w-full bg-gradient-to-r from-indigo-50 to-blue-100 font-medium">
-    <div class="flex items-center justify-between mx-auto flex-nowrap max-w-screen-lg p-4  h-20">
+<nav class="w-full bg-gradient-to-r from-indigo-50 to-blue-100 font-medium dark:text-white dark:from-[#343541] dark:to-[#202123] transition-all duration-300">
+    <div class="flex items-center justify-between mx-auto flex-nowrap max-w-screen-lg p-4 h-20">
         <div class="text-xl font-semibold dark:text-white">
             <a href="/">Commtal</a>
         </div>
@@ -7,32 +7,32 @@
             <ul class="flex">
                 <li class="px-2"><a href="">Home</a></li>
                 <li class="px-2"><a href="">About</a></li>
-                <li class="px-2"><a href="">Services</a></li>
+                <li class="px-2"><a href="/topics">Topics</a></li>
                 <li class="px-2"><a href="">Contact</a></li>
             </ul>
         </div>
         <% if (typeof isAuth !="undefined" && isAuth) { %>
             <div class="flex items-center justify-center">
                 <a href="/auth/logout" class=" text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none
-                focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-all">
+                focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-all dark:bg-[#343541] dark:hover:bg-[#55565e]">
                     Logout
                 </a>
                 <% if (typeof image !="undefined" ) { %>
                     <img src="../../public/images/<%= image %>" alt=""
-                        class=" h-12 w-12  rounded-full ml-3 ring-2 ring-cyan-400 object-cover">
+                        class=" h-12 w-12  rounded-full ml-3 ring-2 ring-cyan-400 object-cover dark:ring-sky-700">
                     <% } %>
             </div>
             <% } else{ %>
                 <div class="flex">
                     <div class="mr-1">
                         <a href="/auth/login" class=" text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none
-                    focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all">
+                    focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center transition-all dark:bg-[#343541] dark:hover:bg-[#55565e]">
                             Sign-in
                         </a>
                     </div>
                     <div>
-                        <a href="/auth/register" class=" bg-white text-cyan-600 hover:bg-gray-50 focus:ring-4 focus:outline-none
-                    focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-all">
+                        <a href="/auth/register" class=" text-white bg-sky-700 hover:opacity-80 focus:ring-4 focus:outline-none
+                    focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-all dark:bg-[#343541] dark:hover:bg-[#55565e]">
                             Sign-up
                         </a>
                     </div>
