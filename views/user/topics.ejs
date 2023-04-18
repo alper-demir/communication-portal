@@ -20,7 +20,8 @@
                         <% if (typeof isAuth !="undefined" ) { %>
                             <div class="w-3/5 mx-auto p-2">
                                 <button onclick="starttopic()"
-                                    class="px-2 py-1 bg-red-300 text-white rounded mx-auto p-2 mt-5">Start a
+                                    class="px-2 py-1 bg-red-300 text-white rounded mx-auto p-2 mt-5 dark:bg-[#444654] dark:hover:opacity-80 transition-all hover:px-3">Start
+                                    a
                                     topic</button>
                             </div>
                             <% } %>
@@ -28,8 +29,8 @@
                                 <form method="post" id="topiccreate" class="hidden w-3/5 mx-auto p-2">
                                     <div class="relative my-2">
                                         <input type="text"
-                                            class="px-2 py-2 peer w-full outline-cyan-600 border-2 rounded" name="title"
-                                            placeholder="Title">
+                                            class="px-2 py-2 peer w-full outline-cyan-600 border-2 rounded dark:bg-[#343541] dark:outline-none dark:border-[#444654] dark:text-[#92959E]"
+                                            name="title" placeholder="Title">
                                     </div>
                                     <div class="relative my-2">
                                         <textarea id="editor" name="content" placeholder="Comment"></textarea>
@@ -48,7 +49,7 @@
                                                     <div class="flex flex-col items-center">
                                                         <a href="/user/<%= topic.user.id %>"> <img
                                                                 src="../../public/images/<%= topic.user.image %>" alt=""
-                                                                class="object-cover h-12 w-12 rounded-full my-2 ring-2 ring-green-400 max-md:h-12 max-md:w-12"></a>
+                                                                class="object-cover h-12 w-12 rounded-full my-2 ring-2 dark:ring-sky-800 max-md:h-12 max-md:w-12 "></a>
                                                         <span class="text-xs">
                                                             <%= topic.user.firstName %>
                                                                 <%= topic.user.lastName %>
