@@ -1,4 +1,5 @@
 <aside class="w-64 border-r-2 border-gray-400 h-screen fixed p-4 pt-32 dark:bg-[#202123] dark:border-[#444654]">
+    <input type="hidden" name="" id="userid" value="<%= userId %>">
     <div>
         <ul class="font-medium pl-2 dark:text-white">
             <li class="my-4"><a href="/">Popular Topics</a></li>
@@ -7,35 +8,66 @@
                 <input type="text" name="" id="" placeholder="Search"
                     class="bg-gray-200 rounded pl-2 py-1 dark:bg-[#40414F] outline-1">
             </li>
+            <div>
+                <% if (typeof isAuth !="undefined" ) { %>
+                    <li class="mt-12 select-none hover:cursor-pointer inline-block" onclick="showFriendList()">
+                        <span>My Friends</span> <span>(3/5)</span>
+                    </li>
+            </div>
+            <div id="friendsList" class="hidden">
+                <ul>
+                    <li>
+                        <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 1
+                    </li>
+                    <li>
+                        <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 2
+                    </li>
+                    <li>
+                        <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 3
+                    </li>
+                    <li>
+                        <div class="w-2 h-2 rounded-full bg-gray-600 inline-block"></div> Friend 4
+                    </li>
+                    <li>
+                        <div class="w-2 h-2 rounded-full bg-gray-600 inline-block"></div> Friend 5
+                    </li>
+                </ul>
+            </div>
+
             <% if (typeof isAuth !="undefined" ) { %>
-                <li class="mt-12 select-none hover:cursor-pointer inline-block" onclick="showFriendList()">
-                    <span>My Friends</span> <span>(3/5)</span>
+                <li class="mt-12 select-none hover:cursor-pointer inline-block" onclick="showReq()">
+                    <span>Requests</span> <span id="request-count">(3)</span>
                 </li>
-                <div id="friendsList" class="hidden">
-                    <ul>
-                        <li>
-                            <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 1
-                        </li>
-                        <li>
-                            <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 2
-                        </li>
-                        <li>
-                            <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 3
-                        </li>
-                        <li>
-                            <div class="w-2 h-2 rounded-full bg-gray-600 inline-block"></div> Friend 4
-                        </li>
-                        <li>
-                            <div class="w-2 h-2 rounded-full bg-gray-600 inline-block"></div> Friend 5
-                        </li>
-                    </ul>
-                </div>
-                <li class="mt-96 fixed bottom-32"><a href="/">Settings</a></li>
                 <% } %>
-                    <div onclick="changeColorMode()" id="colormode"
-                        class="fixed bottom-12 left-10 bg-gray-100 p-3 hover:bg-gray-200 transition-all rounded-xl hover:cursor-pointer w-16 text-center dark:bg-[#343541] dark:hover:bg-[#55565e]">
-                        <i id="coloricon" class="fa-regular fa-moon fa-2xl text-black"></i>
+
+                    <div id="requests" class="hidden">
+                        <ul>
+
+                        </ul>
                     </div>
+                    <li class="mt-96 fixed bottom-32"><a href="/">Settings</a></li>
+                    <% } %>
+                        <div onclick="changeColorMode()" id="colormode"
+                            class="fixed bottom-12 left-10 bg-gray-100 p-3 hover:bg-gray-200 transition-all rounded-xl hover:cursor-pointer w-16 text-center dark:bg-[#343541] dark:hover:bg-[#55565e]">
+                            <i id="coloricon" class="fa-regular fa-moon fa-2xl text-black"></i>
+                        </div>
         </ul>
     </div>
 </aside>
+
+<script>
+    const showReq = () => {
+        const req = document.getElementById("requests")
+        if (req.classList.contains("hidden")) {
+            req.classList.remove("hidden")
+            req.classList.add("block")
+        }
+        else {
+            req.classList.add("hidden")
+            req.classList.remove("block")
+        }
+    }
+
+</script>
+
+<script src="../../public/js/request-actions.js"></script>

@@ -7,6 +7,10 @@ const session = require("express-session")
 const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
+const bodyParser = require("body-parser")
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 app.use(session({
     secret: 'communication portal',
     resave: false,

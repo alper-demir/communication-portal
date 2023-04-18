@@ -3,6 +3,8 @@ const router = express.Router()
 const Topic = require("../models/topic")
 const User = require("../models/user")
 const Comment = require("../models/comment")
+const FriendRequest = require("../models/friend-request")
+const Friendship = require("../models/friendship")
 
 router.get("/", (req, res) => {
     res.render("user/index", {
@@ -98,6 +100,148 @@ router.post("/topic/:id", async (req, res) => {
     }
     catch (error) {
         console.log("Error occured during comment addition" + error)
+    }
+})
+
+router.get("/user/:id", async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const user = await User.findOne({
+            where: {
+                id,
+            }
+        })
+        const date = new Date(user.createdAt)
+        if (user) {
+            res.render("user/user-profile", {
+                title: user.userName,
+                id: user.id,
+                firstname: user.firstName,
+                lastname: user.lastName,
+                username: user.userName,
+                profileimage: user.image, // image : user.image olmaz çünkü "image" session ile taşınıyor navbar'daki görselde params id'ye göre değişiyor, hata.
+                createdAt: date.toLocaleDateString()
+            })
+        }
+        else {
+            res.redirect("/")
+        }
+    }
+    catch (error) {
+        console.log(error)
+    }
+
+
+})
+
+router.post("/api/friend-request", async (req, res) => {
+    const { requesterId, receiverId } = req.body
+
+    const preReq = await FriendRequest.findOne({
+        where: {
+            requesterId,
+            receiverId,
+            status: "pending"
+        }
+    })
+
+    if (preReq) {
+        return res.status(200).send({ status: preReq.status })
+    }
+
+    if (requesterId && receiverId) {
+        try {
+            await FriendRequest.create({ requesterId, receiverId })
+            return res.status(200).send({ message: "successful", status: "pending" })
+        }
+        catch (error) {
+            console.log("Error occured during friend request " + error)
+        }
+    }
+    else {
+        res.status(404).send({ message: "value missing" })
+    }
+})
+
+router.post("/api/friend-request-status", async (req, res) => {
+    const { requesterId, receiverId } = req.body
+    console.log(requesterId)
+    console.log(receiverId)
+
+    try {
+        const list = await FriendRequest.findOne({
+            where: {
+                requesterId: requesterId,
+                receiverId: receiverId,
+                status: "pending" //opt
+            }
+        })
+        if (list) {
+            res.json(list)
+        }
+    }
+    catch (error) {
+        console.log(error)
+    }
+})
+
+router.post("/api/request-status", async (req, res) => {
+    const { requestedId } = req.body
+    console.log(requestedId)
+    try {
+        const response = await FriendRequest.findAll({
+            where: {
+                receiverId: requestedId,
+                status: "pending"
+            },
+            attributes: ['id', 'requesterId'],
+            include: {
+                model: User,
+                attributes: ['userName'],
+            }
+        })
+        console.log(response)
+        if (response) {
+            return res.status(200).send({ requesters: response })
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+})
+
+router.post("/api/reject-request", async (req, res) => {
+    const { requestId } = req.body
+    try {
+        // FriendRequest.destroy({
+        //     where: {
+        //         id: requestId
+        //     }
+        // })
+        FriendRequest.update({ status: "rejected" }, {
+            where: {
+                id: requestId
+            }
+        })
+    }
+    catch (err) {
+        console.log(err)
+    }
+})
+
+router.post("/api/accept-request", async (req, res) => {
+    const { userId, friendId, requestId } = req.body
+    try {
+        await Friendship.create({ userId, friendId })
+        await FriendRequest.update({ status: "accepted" }, {
+            where: {
+                id: requestId
+            }
+        })
+    }
+    catch (err) {
+        console.log(err)
     }
 })
 module.exports = router
