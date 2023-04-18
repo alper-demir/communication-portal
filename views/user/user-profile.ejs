@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="flex flex-wrap dark:bg-[#343541]">
+            <div class="z-10 w-full">
+                <%- include('../partials/navbar') %>
+            </div>
+
+            <%- include('../partials/side') %>
+                <input type="hidden" id="recieverid" value="<%= id %>">
+                <input type="hidden" id="requesterid" value="<%= userId %>">
+                <div class="mt-8 flex-grow ml-64">
+                    <div class="min-h-[85vh]">
+                        <div class="flex flex-col items-center justify-center mt-28 text-center">
+                            <div
+                                class="border-2 border-indigo-400 p-6 rounded shadow-md text-gray-500 dark:text-[#92959E] dark:border-[#444654]">
+                                <p class="font-medium">
+                                    <%= firstname %>
+                                        <%= lastname %>
+                                </p>
+
+                                <p>
+                                    <img src="/public/images/<%= profileimage %>" alt=""
+                                        class="h-32 w-32 rounded-full object-cover my-3 inline-block ring-2 ring-teal-600">
+                                </p>
+                                <p class="text-sm my-1">Member since <%= createdAt %>
+                                </p>
+                                <p>
+                                    @<%= username %>
+                                </p>
+                                <!--buttons-->
+                                <% if (typeof isAuth !="undefined" ) { %>
+                                    <div class="flex mt-3">
+                                        <button
+                                            class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Send
+                                            Message</button>
+                                        <button onclick="sendFriendRequest()" id="btn-req"
+                                            class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Friend
+                                            Request</button>
+
+                                    </div>
+                                    <% } %>
+
+                            </div>
+                        </div>
+                    </div>
+                    <%- include('../partials/footer') %>
+                </div>
+        </div>
+    </body>
+
+    <script src="../../public/js/friend-request.js"></script>
+    <script src="../../public/js/theme.js"></script>
+
+</html>
