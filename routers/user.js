@@ -234,6 +234,7 @@ router.post("/api/accept-request", async (req, res) => {
     const { userId, friendId, requestId } = req.body
     try {
         await Friendship.create({ userId, friendId })
+        await Friendship.create({ userId: friendId, friendId: userId })
         await FriendRequest.update({ status: "accepted" }, {
             where: {
                 id: requestId
@@ -244,4 +245,25 @@ router.post("/api/accept-request", async (req, res) => {
         console.log(err)
     }
 })
+
+router.post("/api/friend-status", async (req, res) => {
+    const { userId } = req.body
+    try {
+        const friends = await Friendship.findAll({
+            where: {
+                userId
+            },
+            include: {
+                model: User,
+                as: 'friend', // relation variable
+                attributes: ["userName", "online"]
+            }
+        });
+        res.status(200).send(friends)
+    }
+    catch (err) {
+        console.log(err)
+    }
+})
+
 module.exports = router

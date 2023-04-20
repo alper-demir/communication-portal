@@ -11,32 +11,19 @@
             <div>
                 <% if (typeof isAuth !="undefined" ) { %>
                     <li class="mt-12 select-none hover:cursor-pointer inline-block" onclick="showFriendList()">
-                        <span>My Friends</span> <span>(3/5)</span>
+                        <span>My Friends</span> <span>(<span id="online-count">0</span>/<span
+                                id="total-count">0</span>)</span>
                     </li>
             </div>
             <div id="friendsList" class="hidden">
                 <ul>
-                    <li>
-                        <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 1
-                    </li>
-                    <li>
-                        <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 2
-                    </li>
-                    <li>
-                        <div class="w-2 h-2 rounded-full bg-teal-500 inline-block"></div> Friend 3
-                    </li>
-                    <li>
-                        <div class="w-2 h-2 rounded-full bg-gray-600 inline-block"></div> Friend 4
-                    </li>
-                    <li>
-                        <div class="w-2 h-2 rounded-full bg-gray-600 inline-block"></div> Friend 5
-                    </li>
+
                 </ul>
             </div>
 
             <% if (typeof isAuth !="undefined" ) { %>
                 <li class="mt-12 select-none hover:cursor-pointer inline-block" onclick="showReq()">
-                    <span>Requests</span> <span id="request-count">(3)</span>
+                    <span>Requests</span> <span id="request-count">(0)</span>
                 </li>
                 <% } %>
 
@@ -71,3 +58,4 @@
 </script>
 
 <script src="../../public/js/request-actions.js"></script>
+<script src="../../public/js/friends.js"></script>

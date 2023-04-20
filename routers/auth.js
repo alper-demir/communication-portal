@@ -88,6 +88,7 @@ router.post("/login", async (req, res) => {
         req.session.username = user.userName
         req.session.userid = user.id
         console.log("auth: " + req.session.isAuth)
+        await User.update({ online: true }, { where: { id: user.id } })
         return res.redirect("/")
     }
     catch (error) {
@@ -99,6 +100,7 @@ router.get("/logout", async (req, res) => {
 
     try {
         delete req.session.isAuth
+        await User.update({ online: 0 }, { where: { id: req.session.userid } })
         res.redirect("/auth/login")
     }
 
