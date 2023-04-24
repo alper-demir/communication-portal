@@ -16,15 +16,30 @@ router.get("/", (req, res) => {
 router.get("/topics", async (req, res) => {
 
     const topics = await Topic.findAll({
-        include: {
-            model: User,
-            attributes: ['id', 'image', 'firstName', 'lastName']
-        }
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'image', 'userName', 'createdAt'],
+            },
+            {
+                // get the information of the user who sent the last message to the topics
+                model: Comment,
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id', 'userName'],
+                    }
+                ],
+                order: [['updatedAt', 'DESC']],
+                limit: 1,
+            }
+        ],
+        order: [['updatedAt', 'DESC']]
     })
     console.log(topics)
     res.render("user/topics", {
         title: "Topics",
-        topics: topics
+        topics: topics,
     })
 })
 

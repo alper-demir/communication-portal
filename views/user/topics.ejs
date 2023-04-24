@@ -39,29 +39,71 @@
                                         class="px-2 py-1 bg-blue-800 rounded text-white hover:-translate-y-[2px] transition-all">Create</button>
                                 </form>
 
-                                <div
-                                    class="w-3/5 mx-auto border-2 border-indigo-400 dark:border-[#444654] rounded mt-5">
+                                <div class="w-3/5 mx-auto border-2 border-indigo-400 dark:border-[#444654] rounded mt-5">
                                     <% topics.forEach(topic=> { %>
                                         <section
                                             class="flex justify-between border-b-2 border-indigo-400 dark:border-[#444654]">
-                                            <div class="flex items-center dark:text-[#92959E]">
-                                                <div class="p-3 text-center min-w-[13rem] max-w-[13rem]">
+                                            <div class="flex items-center dark:text-[#92959E] w-full">
+                                                <!--Image and Username-->
+                                                <div class="p-3 text-center w-[13rem]">
                                                     <div class="flex flex-col items-center">
                                                         <a href="/user/<%= topic.user.id %>"> <img
                                                                 src="../../public/images/<%= topic.user.image %>" alt=""
                                                                 class="object-cover h-12 w-12 rounded-full my-2 ring-2 dark:ring-sky-800 max-md:h-12 max-md:w-12 "></a>
                                                         <span class="text-xs">
-                                                            <%= topic.user.firstName %>
-                                                                <%= topic.user.lastName %>
+                                                            <a href="/user/<%= topic.user.id %>"><%= topic.user.userName %></a>
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div class="font-semibold">
-                                                    <a href="/topic/<%= topic.id %>">
+                                                <div class="font-semibold flex flex-col w-full break-all mr-3">
+                                                    <a class="mt-6" href="/topic/<%= topic.id %>">
                                                         <%= topic.title %>
                                                     </a>
+                                                    <div class="flex mt-4 justify-between text-[1rem]">
+                                                        <!--creation time of topic-->
+                                                        <div>
+                                                            <% const minutesAgo=Math.floor((Date.now() - new
+                                                                   Date(topic.createdAt)) / 1000 / 60); %>
+                                                                <small class="mr-2">
+                                                                    <% if (minutesAgo < 1) { %>
+                                                                        Just now
+                                                                        <% } else if (minutesAgo < 60) { %>
+                                                                            <%= minutesAgo %> minutes ago
+                                                                                <% } else if (minutesAgo < 1440) { %>
+                                                                                    <%= Math.floor(minutesAgo / 60) %>
+                                                                                        hours
+                                                                                        ago
+                                                                                        <% } else { %>
+                                                                                            <%= Math.floor(minutesAgo /
+                                                                                                1440) %>
+                                                                                                days ago
+                                                                                                <% } %>
+                                                                </small>
+                                                                
+                                                        </div>
+                                                        <!--last message time & user-->
+                                                        <div class="text-[1rem]">
+                                                            <small>
+                                                                <a href="/user/<%= topic.comments[0].user.id %>">
+                                                                    <%= topic.comments[0].user.userName %>
+                                                                </a>
+                                                                <span>
+                                                                    <% if (Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60) < 1 ) { %>
+                                                                        <small class="mt-4 text-xs">just now</small>
+                                                                    <% } else if (Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60) < 60 ) { %>
+                                                                        <small class="mt-4 text-xs"><%= Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60) %> minutes ago</small>
+                                                                    <% } else if (Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60 / 60) < 24) { %>
+                                                                        <small class="mt-4 text-xs"><%= Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60 / 60) %> hours ago</small>
+                                                                    <% } else { %>
+                                                                        <small class="mt-4 text-xs"><%= Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60 / 60 / 24) %> days ago</small>
+                                                                    <% } %>
+                                                                </span>
+                                                            </small>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <!--views and messages-->
                                             <div class="dark:text-[#92959E]">
                                                 <div
                                                     class="flex flex-col justify-center pr-8 border-l-2 border-indigo-400 dark:border-[#444654] h-full">
@@ -87,6 +129,7 @@
                     <div>
                         <%- include('../partials/footer') %>
                     </div>
+                    <input type="hidden" class="bg-teal-500" name="">
                 </div>
         </div>
     </body>
