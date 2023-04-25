@@ -3,6 +3,7 @@ const Topic = require("../models/topic")
 const Comment = require("../models/comment")
 const FriendRequest = require("../models/friend-request")
 const Friendship = require("../models/friendship")
+const Messages = require("../models/messages")
 const bcrypt = require("bcrypt")
 
 const testData = async () => {
@@ -51,9 +52,11 @@ Comment.belongsTo(Topic, { foreignKey: 'topicId' })
 Comment.belongsTo(User)
 User.hasMany(Comment)
 
-FriendRequest.belongsTo(User, { foreignKey: 'requesterId'});
+FriendRequest.belongsTo(User, { foreignKey: 'requesterId' });
 
 Friendship.belongsTo(User, { foreignKey: 'userId' });
 Friendship.belongsTo(User, { foreignKey: 'friendId', as: 'friend' });
+
+Messages.belongsTo(User, { foreignKey: 'senderId', as: 'friend' })
 
 module.exports = testData

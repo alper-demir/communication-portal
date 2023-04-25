@@ -5,13 +5,15 @@ const User = require("../models/user")
 const Comment = require("../models/comment")
 const FriendRequest = require("../models/friend-request")
 const Friendship = require("../models/friendship")
+const Messages = require("../models/messages")
+const auth = require("../middlewares/auth")
+
 
 router.get("/", (req, res) => {
     res.render("user/index", {
         title: "index",
     })
 })
-
 
 router.get("/topics", async (req, res) => {
 
@@ -271,7 +273,7 @@ router.post("/api/friend-status", async (req, res) => {
             include: {
                 model: User,
                 as: 'friend', // relation variable
-                attributes: ["userName", "online"]
+                attributes: ["userName", "online", "id"]
             }
         });
         res.status(200).send(friends)
@@ -279,6 +281,49 @@ router.post("/api/friend-status", async (req, res) => {
     catch (err) {
         console.log(err)
     }
+})
+
+router.get("/chat/:friendId", auth, async (req, res) => {
+    const friendId = req.params.friendId
+    const userId = req.session.userid;
+    const roomId = [userId, friendId].sort().join("-");
+    const friend = await User.findByPk(friendId, { attributes: ['image', 'id'] })
+    res.render("user/chat", {
+        title: roomId,
+        roomId,
+        friendImage: friend.image,
+        friendId: friend.id
+    })
+})
+
+router.post("/api/save-message", async (req, res) => {
+    const { message, roomId, senderId, receiverId } = req.body
+    try {
+        await Messages.create({ roomId, senderId, receiverId, message })
+    }
+    catch (err) {
+        console.log(err)
+    }
+})
+
+router.get("/api/messages/:room", async (req, res) => {
+    const roomId = req.params.room
+    try {
+        const messages = await Messages.findAll({
+            where: {
+                roomId,
+            },
+            include: {
+                model: User,
+                as: "friend",
+                attributes: ["image"]
+            }
+        })
+        if (messages) {
+            res.status(200).send({ messages })
+        }
+    }
+    catch (err) { console.log(err) }
 })
 
 module.exports = router
