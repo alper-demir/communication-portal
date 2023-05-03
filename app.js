@@ -3,6 +3,10 @@ const app = express()
 app.use(express.urlencoded({ extended: false }))
 const dotenv = require('dotenv').config()
 const session = require("express-session")
+const sequelize = require("./data/db")
+
+
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 // socket
 const http = require("http")
@@ -42,7 +46,10 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         maxAge: 60 * 60 * 1000 // 60 min
-    }
+    },
+    store: new SequelizeStore({
+        db: sequelize
+    })
 }))
 
 const locals = require("./middlewares/locals")
@@ -62,7 +69,6 @@ app.use("/public", express.static("public")); // makes static files reachable un
 app.use("/auth", authRoutes)
 app.use("/", userRoutes)
 
-const sequelize = require("./data/db")
 const testData = require("./data/test-data")
 
 async function sync() {

@@ -32,14 +32,41 @@
                                 </p>
                                 <!--buttons-->
                                 <% if (typeof isAuth !="undefined" ) { %>
-                                    <div class="flex mt-3">
-                                        <button
-                                            class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Send
-                                            Message</button>
-                                        <button onclick="sendFriendRequest()" id="btn-req"
-                                            class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Friend
-                                            Request</button>
+                                    <div class="flex justify-center items-center mt-3">
+                                        <% if (id !==userId) { %>
+                                            <a href="/chat/<%= id %>"
+                                                class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80 hover:cursor-pointer">Send
+                                                Message
+                                            </a>
 
+                                            <% if (!friendship) { %>
+
+                                                <% if (isRequest) { %>
+                                                    <button onclick="acceptFriendRequest()"
+                                                        class="px-2 bg-teal-700 text-white rounded mx-1 text-sm py-1 dark:bg-green-800 hover:opacity-80">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </button>
+                                                    <button onclick="rejectFriendRequest()"
+                                                        class="px-2 bg-red-700 text-white rounded mx-1 text-sm py-1 dark:bg-red-900 hover:opacity-80">
+                                                        <i class="fa-solid fa-xmark"></i>
+                                                    </button>
+                                                    <% } else{ %>
+                                                        <button onclick="sendFriendRequest()" id="btn-req"
+                                                            class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Friend
+                                                            Request
+                                                        </button>
+                                                        <% } %>
+                                                            <% } else{ %>
+                                                                <button onclick="unFriend()" id="btn-unfriend"
+                                                                    class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">
+                                                                    Unfriend
+                                                                </button>
+                                                                <% } %>%>
+                                                                    <% } else{%>
+                                                                        <button
+                                                                            class="px-2 bg-green-800 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Edit
+                                                                            Profile</button>
+                                                                        <%}%>
                                     </div>
                                     <% } %>
 
@@ -51,6 +78,6 @@
         </div>
     </body>
 
-    <script src="../../public/js/friend-request.js"></script>
+    <script src="../../public/js/friendOperations.js"></script>
 
 </html>

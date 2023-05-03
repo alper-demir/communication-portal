@@ -8,7 +8,6 @@ const Friendship = require("../models/friendship")
 const Messages = require("../models/messages")
 const auth = require("../middlewares/auth")
 
-
 router.get("/", (req, res) => {
     res.render("user/index", {
         title: "index",
@@ -122,7 +121,6 @@ router.post("/topic/:id", async (req, res) => {
 
 router.get("/user/:id", async (req, res) => {
     const id = req.params.id
-
     try {
         const user = await User.findOne({
             where: {
@@ -130,7 +128,25 @@ router.get("/user/:id", async (req, res) => {
             }
         })
         const date = new Date(user.createdAt)
+        let friendship = false
+
+
+        const isRequest = await FriendRequest.findOne({
+            where: {
+                requesterId: id,
+                receiverId: req.session.userid,
+                status: "pending"
+            }
+        })
+
         if (user) {
+            const isFriend = await Friendship.findOne({
+                where: {
+                    userId: req.session.userid,
+                    friendId: id
+                }
+            })
+            isFriend ? friendship = true : friendship = false
             res.render("user/user-profile", {
                 title: user.userName,
                 id: user.id,
@@ -138,7 +154,9 @@ router.get("/user/:id", async (req, res) => {
                 lastname: user.lastName,
                 username: user.userName,
                 profileimage: user.image, // image : user.image olmaz çünkü "image" session ile taşınıyor navbar'daki görselde params id'ye göre değişiyor, hata.
-                createdAt: date.toLocaleDateString()
+                createdAt: date.toLocaleDateString(),
+                friendship,
+                isRequest: isRequest ? true : false
             })
         }
         else {
@@ -150,6 +168,30 @@ router.get("/user/:id", async (req, res) => {
     }
 
 
+})
+
+router.post("/api/friendship-delete", async (req, res) => {
+    const { userId, friendId } = req.body
+    try {
+        const deleteFriend = await Friendship.destroy({
+            where: {
+                userId,
+                friendId
+            }
+        })
+        await Friendship.destroy({
+            where: {
+                userId: friendId,
+                friendId: userId
+            }
+        })
+        if (deleteFriend) {
+            res.status(200).send({ message: "Friend deleted" })
+        }
+    }
+    catch (error) {
+        console.log("Error occured during unfriend: " + error)
+    }
 })
 
 router.post("/api/friend-request", async (req, res) => {
@@ -164,7 +206,13 @@ router.post("/api/friend-request", async (req, res) => {
     })
 
     if (preReq) {
-        return res.status(200).send({ status: preReq.status })
+        await FriendRequest.destroy({
+            where: {
+                requesterId,
+                receiverId
+            }
+        })
+        return res.status(200).send({ status: "Friend Request" })
     }
 
     if (requesterId && receiverId) {
@@ -229,18 +277,29 @@ router.post("/api/request-status", async (req, res) => {
 })
 
 router.post("/api/reject-request", async (req, res) => {
-    const { requestId } = req.body
+    const { requestId, userId, friendId } = req.body
     try {
         // FriendRequest.destroy({
         //     where: {
         //         id: requestId
         //     }
         // })
-        FriendRequest.update({ status: "rejected" }, {
-            where: {
-                id: requestId
-            }
-        })
+        if (!requestId) {
+            FriendRequest.update({ status: "rejected" }, {
+                where: {
+                    requesterId: userId,
+                    receiverId: friendId
+                }
+            })
+        }
+        else {
+            FriendRequest.update({ status: "rejected" }, {
+                where: {
+                    id: requestId
+                }
+            })
+        }
+        return res.status(200).send({ message: "accepted" })
     }
     catch (err) {
         console.log(err)
@@ -252,11 +311,22 @@ router.post("/api/accept-request", async (req, res) => {
     try {
         await Friendship.create({ userId, friendId })
         await Friendship.create({ userId: friendId, friendId: userId })
-        await FriendRequest.update({ status: "accepted" }, {
-            where: {
-                id: requestId
-            }
-        })
+        if (!requestId) {
+            await FriendRequest.update({ status: "accepted" }, {
+                where: {
+                    requesterId: userId,
+                    receiverId: friendId
+                }
+            })
+        }
+        else {
+            await FriendRequest.update({ status: "accepted" }, {
+                where: {
+                    id: requestId
+                }
+            })
+        }
+        return res.status(200).send({ message: "accepted" })
     }
     catch (err) {
         console.log(err)
@@ -324,6 +394,24 @@ router.get("/api/messages/:room", async (req, res) => {
         }
     }
     catch (err) { console.log(err) }
+})
+
+router.post("/api/messages-notify/:user", async (req, res) => {
+    const id = req.params.user
+    try {
+        const notification = await Messages.findAll({
+            where: {
+                receiverId: id,
+                isRead: false
+            },
+        })
+        if (notification) {
+            res.status(200).send(notification)
+        }
+    }
+    catch (error) {
+        console.log("notification error" + error)
+    }
 })
 
 module.exports = router
