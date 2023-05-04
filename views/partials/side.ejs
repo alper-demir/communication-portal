@@ -5,8 +5,10 @@
             <li class="my-4"><a href="/">Popular Topics</a></li>
             <li class="my-4"><a href="/">New Topics</a></li>
             <li class="my-4">
-                <input type="text" name="" id="" placeholder="Search"
-                    class="bg-gray-200 rounded pl-2 py-1 dark:bg-[#40414F] outline-1">
+                <form action="/search" method="get">
+                    <input type="text" name="q" placeholder="Search"
+                        class="bg-gray-200 rounded pl-2 py-1 dark:bg-[#40414F] outline-1">
+                </form>
             </li>
             <div>
                 <% if (typeof isAuth !="undefined" ) { %>

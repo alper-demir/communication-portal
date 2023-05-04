@@ -7,6 +7,7 @@ const FriendRequest = require("../models/friend-request")
 const Friendship = require("../models/friendship")
 const Messages = require("../models/messages")
 const auth = require("../middlewares/auth")
+const { Op } = require("sequelize")
 
 router.get("/", (req, res) => {
     res.render("user/index", {
@@ -130,23 +131,31 @@ router.get("/user/:id", async (req, res) => {
         const date = new Date(user.createdAt)
         let friendship = false
 
-
-        const isRequest = await FriendRequest.findOne({
-            where: {
-                requesterId: id,
-                receiverId: req.session.userid,
-                status: "pending"
-            }
-        })
-
-        if (user) {
-            const isFriend = await Friendship.findOne({
+        let isRequestTrue = false
+        if (req.session.userid) {
+            const isRequest = await FriendRequest.findOne({
                 where: {
-                    userId: req.session.userid,
-                    friendId: id
+                    requesterId: id,
+                    receiverId: req.session.userid,
+                    status: "pending"
                 }
             })
-            isFriend ? friendship = true : friendship = false
+            isRequest ? isRequestTrue = true : isRequestTrue = false
+        }
+
+
+        if (user) {
+            let friendship = false
+            if (req.session.userid) {
+                const isFriend = await Friendship.findOne({
+                    where: {
+                        userId: req.session.userid,
+                        friendId: id
+                    }
+                })
+                isFriend ? friendship = true : friendship = false
+            }
+
             res.render("user/user-profile", {
                 title: user.userName,
                 id: user.id,
@@ -156,7 +165,7 @@ router.get("/user/:id", async (req, res) => {
                 profileimage: user.image, // image : user.image olmaz çünkü "image" session ile taşınıyor navbar'daki görselde params id'ye göre değişiyor, hata.
                 createdAt: date.toLocaleDateString(),
                 friendship,
-                isRequest: isRequest ? true : false
+                isRequest: isRequestTrue
             })
         }
         else {
@@ -412,6 +421,41 @@ router.post("/api/messages-notify/:user", async (req, res) => {
     catch (error) {
         console.log("notification error" + error)
     }
+})
+
+router.get("/search", async (req, res) => {
+    const key = req.query.q
+
+    const topics = await Topic.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'image', 'userName', 'createdAt'],
+            },
+            {
+                // get the information of the user who sent the last message to the topics
+                model: Comment,
+                include: [
+                    {
+                        model: User,
+                        attributes: ['id', 'userName'],
+                    }
+                ],
+                order: [['updatedAt', 'DESC']],
+                limit: 1,
+            }
+        ],
+        order: [['views', 'DESC']],
+        where: { title: { [Op.like]: `%${key}%` } },
+        limit: 10
+    })
+
+    const users = await User.findAll({
+        where: { username: { [Op.like]: `%${key}%` } },
+        limit: 10
+    });
+
+    res.render("user/searched", { title: key, topics, users, })
 })
 
 module.exports = router

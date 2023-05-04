@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+
+    <style>
+        section:last-child {
+            border: none;
+        }
+    </style>
+
+    <body>
+        <div class="flex flex-wrap dark:bg-[#343541]">
+            <div class="z-10 w-full">
+                <%- include('../partials/navbar') %>
+            </div>
+
+            <%- include('../partials/side') %>
+                <div class="mt-8 flex-grow ml-64">
+                    <div class="min-h-[85vh] mb-40 mt-20">
+
+                        <% if (topics.length> 0) { %>
+                            <div class="flex justify-center">
+                                <h3
+                                    class="inline-block mx-auto mt-5 dark:text-[#92959E] text-center text-xl border-b-2 border-indigo-400 dark:border-[#444654] pb-2 w-20">
+                                    Topics</h3>
+                            </div>
+                            <div class="w-3/5 mx-auto border-2 border-indigo-400 dark:border-[#444654] rounded mt-5">
+                                <% topics.forEach(topic=> { %>
+                                    <section
+                                        class="flex justify-between border-b-2 border-indigo-400 dark:border-[#444654]">
+                                        <div class="flex items-center dark:text-[#92959E] w-full">
+                                            <!--Image and Username-->
+                                            <div class="p-3 text-center w-[13rem]">
+                                                <div class="flex flex-col items-center">
+                                                    <a href="/user/<%= topic.user.id %>">
+                                                        <img src="../../public/images/<%= topic.user.image %>" alt=""
+                                                            class="object-cover h-12 w-12 rounded-full my-2 ring-2 dark:ring-sky-800 max-md:h-12 max-md:w-12 ">
+                                                    </a>
+                                                    <span class="text-xs">
+                                                        <a href="/user/<%= topic.user.id %>">
+                                                            <%= topic.user.userName %>
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="font-semibold flex flex-col w-full break-all mr-3">
+                                                <a class="mt-6" href="/topic/<%= topic.id %>">
+                                                    <%= topic.title %>
+                                                </a>
+                                                <div class="flex mt-4 justify-between text-[1rem]">
+                                                    <!--creation time of topic-->
+                                                    <div>
+                                                        <% const minutesAgo=Math.floor((Date.now() - new
+                                                            Date(topic.createdAt)) / 1000 / 60); %>
+                                                            <small class="mr-2">
+                                                                <% if (minutesAgo < 1) { %>
+                                                                    Just now
+                                                                    <% } else if (minutesAgo < 60) { %>
+                                                                        <%= minutesAgo %> minutes ago
+                                                                            <% } else if (minutesAgo < 1440) { %>
+                                                                                <%= Math.floor(minutesAgo / 60) %>
+                                                                                    hours
+                                                                                    ago
+                                                                                    <% } else { %>
+                                                                                        <%= Math.floor(minutesAgo /
+                                                                                            1440) %>
+                                                                                            days ago
+                                                                                            <% } %>
+                                                            </small>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--views and messages-->
+                                        <div class="dark:text-[#92959E]">
+                                            <div
+                                                class="flex flex-col justify-center pr-8 border-l-2 border-indigo-400 dark:border-[#444654] h-full">
+                                                <div class="flex justify-between">
+                                                    <div class="px-4">Views:</div>
+                                                    <div>
+                                                        <%= topic.views %>
+                                                    </div>
+                                                </div>
+                                                <div class="flex justify-between">
+                                                    <div class="px-4">Messages:</div>
+                                                    <div>
+                                                        <%= topic.messages %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <% }) %>
+
+
+                            </div>
+                            <% } else{%>
+                                <div class="text-center">
+                                    <div class="inline-block py-2 px-4 bg-indigo-600 dark:text-white rounded-lg my-2 mx-auto">
+                                        <p>Topic record not found</p=>
+                                    </div>
+                                </div>
+                                <% }%>
+
+
+                                    <% if (users.length> 0 ) { %>
+                                        <div class="flex justify-center">
+                                            <h3
+                                                class="inline-block mx-auto mt-5 dark:text-[#92959E] text-center text-xl border-b-2 border-indigo-400 dark:border-[#444654] pb-2 w-20">
+                                                Users</h3>
+                                        </div>
+                                        <div
+                                            class="w-1/6 mx-auto border-2 border-indigo-400 dark:border-[#444654] rounded mt-5 dark:text-[#92959E]">
+                                            <% users.forEach(user=> { %>
+                                                <section
+                                                    class="flex justify-center border-b-2 border-indigo-400 dark:border-[#444654]">
+
+                                                    <div class="p-3 text-center w-[13rem]">
+                                                        <div class="flex flex-col items-center">
+                                                            <a href="/user/<%= user.id %>">
+                                                                <img src="../../public/images/<%= user.image %>" alt=""
+                                                                    class="object-cover h-12 w-12 rounded-full my-2 ring-2 dark:ring-sky-800 max-md:h-12 max-md:w-12 ">
+                                                            </a>
+                                                            <span class="text-xs">
+                                                                <a href="/user/<%= user.id %>">
+                                                                    @<%= user.userName %>
+                                                                </a>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <% }) %>
+                                        </div>
+                                        <% } else{%>
+                                            <div class="text-center mt-5">
+                                                <div
+                                                    class="inline-block py-2 px-4 bg-indigo-600 dark:text-white rounded-lg my-2 mx-auto">
+                                                    <p>User record not found</p>
+                                                </div>
+                                            </div>
+                                            <% }%>
+
+                    </div>
+                    <div>
+                        <%- include('../partials/footer') %>
+                    </div>
+                    <input type="hidden" class="bg-teal-500" name="">
+                </div>
+        </div>
+    </body>
+
+    <%- include('../partials/ck-editor') %>
+
+</html>
