@@ -89,7 +89,7 @@ router.post("/login", async (req, res) => {
         req.session.userid = user.id
         console.log("auth: " + req.session.isAuth)
         await User.update({ online: true }, { where: { id: user.id } })
-        return res.redirect("/")
+        return res.redirect("/topics")
     }
     catch (error) {
         console.log(error)

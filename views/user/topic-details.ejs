@@ -30,15 +30,19 @@
                                     <aside
                                         class="border-r-2 border-indigo-400 p-6 text-center min-w-[13rem] max-w-[13rem] dark:border-[#444654]">
                                         <div class="flex flex-col items-center">
-                                            <img src="../../public/images/<%= comments[index].user.image %>" alt=""
-                                                class="object-cover h-24 w-24 rounded-full my-2 ring-2 ring-green-400 max-md:h-12 max-md:w-12 dark:ring-sky-800">
+                                            <a href="/user/<%= comments[index].user.id %>">
+                                                <img src="../../public/images/<%= comments[index].user.image %>" alt=""
+                                                    class="object-cover h-24 w-24 rounded-full my-2 ring-2 ring-green-400 max-md:h-12 max-md:w-12 dark:ring-sky-800">
+                                            </a>
                                             <span class="text-sm text-[#92959E]">
                                                 <%= comments[index].user.firstName %>
                                                     <%= comments[index].user.lastName %>
                                             </span>
-                                            <small class="text-gray-500 dark:text-[#92959E]">
-                                                @<%= comments[index].user.userName %>
-                                            </small>
+                                            <a href="/user/<%= comments[index].user.id %>">
+                                                <small class="text-gray-500 dark:text-[#92959E]">
+                                                    @<%= comments[index].user.userName %>
+                                                </small>
+                                            </a>
                                         </div>
                                     </aside>
                                     <div class="flex flex-col w-full dark:text-[#92959E]">
@@ -54,7 +58,7 @@
                                             <%- comments[index].content %>
                                         </div>
                                     </div>
-                                    
+
                                 </section>
                             </div>
                             <% } %>

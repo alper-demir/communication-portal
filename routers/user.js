@@ -8,11 +8,59 @@ const Friendship = require("../models/friendship")
 const Messages = require("../models/messages")
 const auth = require("../middlewares/auth")
 const { Op } = require("sequelize")
+const bcrypt = require("bcrypt")
 
 router.get("/", (req, res) => {
-    res.render("user/index", {
-        title: "index",
+    res.render("auth/login", {
+        title: "Login",
     })
+})
+
+router.post("/", async (req, res) => {
+    const { email, password } = req.body
+    try {
+        const user = await User.findOne({
+            where: {
+                email: email
+            }
+        })
+        if (!user) {
+            return res.render("auth/login", {
+                message: {
+                    text: "Please check your informations",
+                    type: "Warning"
+                },
+                title: "Login",
+                email: email,
+                password: password
+            }
+            )
+        }
+        const compare = await bcrypt.compare(password, user.password)
+        if (!compare) {
+            return res.render("auth/login", {
+                message: {
+                    text: "Password is wrong",
+                    type: "Warning"
+                },
+                title: "Login",
+                email: email,
+                password: password
+
+            }
+            )
+        }
+        req.session.isAuth = true
+        req.session.image = user.image
+        req.session.username = user.userName
+        req.session.userid = user.id
+        console.log("auth: " + req.session.isAuth)
+        await User.update({ online: true }, { where: { id: user.id } })
+        return res.redirect("/topics")
+    }
+    catch (error) {
+        console.log(error)
+    }
 })
 
 router.get("/topics", async (req, res) => {
@@ -89,7 +137,7 @@ router.get("/topic/:id", async (req, res) => {
                 },
                 attributes: ['title', 'createdAt', 'id']
             },
-            { model: User, attributes: ['userName', 'image', 'firstName', 'lastName'] }
+            { model: User, attributes: ['userName', 'image', 'firstName', 'lastName','id'] }
         ]
     })
     console.log(comments)
@@ -456,6 +504,73 @@ router.get("/search", async (req, res) => {
     });
 
     res.render("user/searched", { title: key, topics, users, })
+})
+
+router.get("/popular-topics", async (req, res) => {
+    try {
+        const topics = await Topic.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'image', 'userName', 'createdAt'],
+                },
+                {
+                    model: Comment,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['id', 'userName'],
+                        }
+                    ],
+                    order: [['updatedAt', 'DESC']],
+                    limit: 1,
+                }
+            ],
+            order: [['Views', 'DESC']],
+            limit: 20
+        })
+        res.render("user/topics-list", {
+            topics,
+            title: "Popular Topics"
+        })
+    }
+    catch (error) {
+        console.log(error)
+    }
+})
+
+router.get("/new-topics", async (req, res) => {
+    try {
+
+        const topics = await Topic.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'image', 'userName', 'createdAt'],
+                },
+                {
+                    model: Comment,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['id', 'userName'],
+                        }
+                    ],
+                    order: [['updatedAt', 'DESC']],
+                    limit: 1,
+                }
+            ],
+            order: [['createdAt', 'DESC']],
+            limit: 20
+        })
+        res.render("user/topics-list", {
+            topics,
+            title: "New Topics"
+        })
+    }
+    catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router
