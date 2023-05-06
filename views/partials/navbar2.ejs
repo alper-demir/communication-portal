@@ -1,0 +1,68 @@
+<nav class="w-full font-medium bg-transparent text-black dark:text-white">
+    <% if (typeof isAuth !="undefined" && isAuth) { %>
+        <div class=" mt-5 hidden max-sm:block dark:text-white absolute top-[1.2rem] left-5 transition-none">
+            <a href="#"> <i class="fas fa-bars" onclick="showSide()"></i> </a>
+        </div>
+        <% } else{%>
+            <div class=" mt-5 hidden max-sm:block dark:text-white absolute left-5 transition-none">
+                <a href="#"> <i class="fas fa-bars" onclick="showSide()"></i> </a>
+            </div>
+            <% }%>
+                <div
+                    class="flex items-center justify-between max-xl:justify-around mx-auto flex-nowrap max-w-screen-lg p-4">
+
+                    <div class="text-xl dark:text-white">
+                        <a href="/">Commtal</a>
+                    </div>
+                    <% if (typeof isAuth !="undefined" && isAuth) { %>
+                        <div class="flex items-center justify-center">
+                            <a href="/auth/logout" class="focus:ring-4 focus:outline-none
+                    focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-all">
+                                Logout
+                            </a>
+                            <% if (typeof image !="undefined" ) { %>
+                                <img src="../../public/images/<%= image %>" alt=""
+                                    class=" h-12 w-12  rounded-full ml-3 ring-2 ring-cyan-400 object-cover dark:ring-sky-700">
+                                <% } %>
+                        </div>
+                        <% } else{ %>
+                            <div class="flex">
+                                <div>
+                                    <a href="/auth/login" class="focus:ring-4 focus:outline-none
+                        focus:ring-orange-300 rounded-lg px-4 py-2 text-center transition-all">
+                                        Sign-in
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="/auth/register" class="focus:ring-4 focus:outline-none
+                            focus:ring-orange-300 rounded-lg px-4 py-2 text-center transition-all">
+                                        Sign-up
+                                    </a>
+                                </div>
+                            </div>
+                            <% }%>
+
+
+                </div>
+</nav>
+
+<script>
+    let orgside = document.getElementById("orgside")
+    let container = document.getElementById("side-container")
+    function showSide() {
+        if (document.querySelector('html').classList.contains('dark')) {
+            container.style.backgroundColor = '#202123'
+        }
+        else {
+            container.style.backgroundColor = '#fff'
+        }
+        if (container.classList.contains('max-sm:-translate-x-60')) {
+            container.classList.remove("max-sm:-translate-x-60")
+
+        }
+        else {
+            container.classList.add('max-sm:-translate-x-60')
+            container.style.backgroundColor = 'tranparent'
+        }
+    }
+</script>

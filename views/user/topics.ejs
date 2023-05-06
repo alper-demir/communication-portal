@@ -2,151 +2,194 @@
 <html lang="en">
 <%- include('../partials/head') %>
 
-    <style>
-        section:last-child {
-            border: none;
-        }
-    </style>
-
     <body>
-        <div class="flex flex-wrap dark:bg-[#343541]">
-            <div class="z-10 w-full">
-                <%- include('../partials/navbar') %>
-            </div>
-
+        <div class="flex">
             <%- include('../partials/side') %>
-                <div class="mt-8 flex-grow ml-64">
-                    <div class="min-h-[85vh] mb-40 mt-20">
-                        <% if (typeof isAuth !="undefined" ) { %>
-                            <div class="w-3/5 mx-auto p-2">
-                                <button onclick="starttopic()"
-                                    class="px-2 py-1 bg-red-300 text-white rounded mx-auto p-2 mt-5 dark:bg-[#444654] dark:hover:opacity-80 transition-all hover:px-3">Start
-                                    a
-                                    topic</button>
-                            </div>
-                            <% } %>
-                                <!--topic create-->
-                                <form method="post" id="topiccreate" class="hidden w-3/5 mx-auto p-2">
-                                    <div class="relative my-2">
-                                        <input type="text"
-                                            class="px-2 py-2 peer w-full outline-cyan-600 border-2 rounded dark:bg-[#343541] dark:outline-none dark:border-[#444654] dark:text-[#92959E]"
-                                            name="title" placeholder="Title">
-                                    </div>
-                                    <div class="relative my-2">
-                                        <textarea id="editor" name="content" placeholder="Comment"></textarea>
-                                    </div>
-                                    <button type="submit"
-                                        class="px-2 py-1 bg-blue-800 rounded text-white hover:-translate-y-[2px] transition-all">Create</button>
-                                </form>
 
-                                <div class="w-3/5 mx-auto border-2 border-indigo-400 dark:border-[#444654] rounded mt-5">
-                                    <% topics.forEach(topic=> { %>
-                                        <section
-                                            class="flex justify-between border-b-2 border-indigo-400 dark:border-[#444654]">
-                                            <div class="flex items-center dark:text-[#92959E] w-full">
-                                                <!--Image and Username-->
-                                                <div class="p-3 text-center w-[13rem]">
-                                                    <div class="flex flex-col items-center">
-                                                        <a href="/user/<%= topic.user.id %>"> <img
-                                                                src="../../public/images/<%= topic.user.image %>" alt=""
-                                                                class="object-cover h-12 w-12 rounded-full my-2 ring-2 dark:ring-sky-800 max-md:h-12 max-md:w-12 "></a>
-                                                        <span class="text-xs">
-                                                            <a href="/user/<%= topic.user.id %>"><%= topic.user.userName %></a>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="font-semibold flex flex-col w-full break-all mr-3">
-                                                    <a class="mt-6" href="/topic/<%= topic.id %>">
-                                                        <%= topic.title %>
-                                                    </a>
-                                                    <div class="flex mt-4 justify-between text-[1rem]">
-                                                        <!--creation time of topic-->
-                                                        <div>
-                                                            <% const minutesAgo=Math.floor((Date.now() - new
-                                                                   Date(topic.createdAt)) / 1000 / 60); %>
-                                                                <small class="mr-2">
-                                                                    <% if (minutesAgo < 1) { %>
-                                                                        Just now
-                                                                        <% } else if (minutesAgo < 60) { %>
-                                                                            <%= minutesAgo %> minutes ago
-                                                                                <% } else if (minutesAgo < 1440) { %>
-                                                                                    <%= Math.floor(minutesAgo / 60) %>
-                                                                                        hours
-                                                                                        ago
-                                                                                        <% } else { %>
-                                                                                            <%= Math.floor(minutesAgo /
-                                                                                                1440) %>
-                                                                                                days ago
-                                                                                                <% } %>
-                                                                </small>
-                                                                
-                                                        </div>
-                                                        <!--last message time & user-->
-                                                        <div class="text-[1rem]">
-                                                            <small>
-                                                                <a href="/user/<%= topic.comments[0].user.id %>">
-                                                                    <%= topic.comments[0].user.userName %>
-                                                                </a>
-                                                                <span>
-                                                                    <% if (Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60) < 1 ) { %>
-                                                                        <small class="mt-4 text-xs">just now</small>
-                                                                    <% } else if (Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60) < 60 ) { %>
-                                                                        <small class="mt-4 text-xs"><%= Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60) %> minutes ago</small>
-                                                                    <% } else if (Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60 / 60) < 24) { %>
-                                                                        <small class="mt-4 text-xs"><%= Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60 / 60) %> hours ago</small>
-                                                                    <% } else { %>
-                                                                        <small class="mt-4 text-xs"><%= Math.floor((Date.now() - new Date(topic.updatedAt)) / 1000 / 60 / 60 / 24) %> days ago</small>
-                                                                    <% } %>
+                <div
+                    class="w-full max-lg:ml-40 max-sm:ml-0 ml-60 p-2 min-h-screen max-lg:text-sm dark:bg-[#343541] dark:text-[#92959E]">
+                    <%- include('../partials/navbar2') %>
+                        <main class="flex flex-col justify-center items-center my-20">
+                            <div class="w-2/3 max-lg:w-3/4 break-words max-sm:w-5/6">
+
+                                <% if (typeof isAuth !="undefined" ) { %>
+                                    <div class="mx-auto py-2">
+                                        <button onclick="starttopic()"
+                                            class="px-2 py-1 bg-indigo-500 text-white rounded mx-auto p-2 mt-5 dark:bg-[#444654] dark:hover:opacity-80 transition-all hover:px-3">
+                                            Start a topic
+                                        </button>
+                                    </div>
+                                    <% } %>
+                                        <!--topic create-->
+                                        <form method="post" id="topiccreate" class="hidden mx-auto pb-5">
+                                            <div class="relative my-2">
+                                                <input type="text"
+                                                    class="px-2 py-2 peer w-full outline-cyan-600 border-2 rounded dark:bg-[#343541] dark:outline-none dark:border-[#444654] dark:text-white"
+                                                    name="title" placeholder="Title">
+                                            </div>
+                                            <div class="relative my-2 text-black">
+                                                <textarea id="editor" name="content" placeholder="Comment"></textarea>
+                                            </div>
+                                            <button type="submit"
+                                                class="px-2 py-1 bg-blue-800 rounded text-white transition-all hover:px-3 dark:bg-cyan-900">
+                                                Create
+                                            </button>
+                                        </form>
+                                        <div class="border-2 border-indigo-400 dark:border-[#444654] rounded">
+                                            <% topics.forEach(topic=> { %>
+                                                <section
+                                                    class="flex justify-between border-b-2 border-indigo-400 dark:border-[#444654]">
+                                                    <div class="flex items-center dark:text-[#92959E] w-full">
+                                                        <!--Image and Username-->
+                                                        <div class="p-3 text-center w-40">
+                                                            <div class="flex flex-col items-center">
+                                                                <a href="/user/<%= topic.user.id %>">
+                                                                    <img src="../../public/images/<%= topic.user.image %>"
+                                                                        alt=""
+                                                                        class="object-cover h-12 w-12 rounded-full my-2 ring-2 dark:ring-sky-800 max-lg:h-10 max-lg:w-10 max-md:h-10 max-md:w-10"></a>
+                                                                <span class="text-xs">
+                                                                    <a href="/user/<%= topic.user.id %>">
+                                                                        @<%= topic.user.userName %>
+                                                                    </a>
                                                                 </span>
-                                                            </small>
+                                                                <div class="pt-2 max-lg:block hidden">
+                                                                    <div class="flex">
+                                                                        <div>
+                                                                            <i class="fa-solid fa-eye"></i>
+                                                                            <span>
+                                                                                <%= topic.views %>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="ml-3">
+                                                                            <i class="fa-solid fa-message"></i>
+                                                                            <span>
+                                                                                <%= topic.messages %>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!--views and messages-->
-                                            <div class="dark:text-[#92959E]">
-                                                <div
-                                                    class="flex flex-col justify-center pr-8 border-l-2 border-indigo-400 dark:border-[#444654] h-full">
-                                                    <div class="flex justify-between">
-                                                        <div class="px-4">Views:</div>
-                                                        <div>
-                                                            <%= topic.views %>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex justify-between">
-                                                        <div class="px-4">Messages:</div>
-                                                        <div>
-                                                            <%= topic.messages %>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>
-                                        <% }) %>
+                                                        <div
+                                                            class="font-semibold flex flex-col justify-center w-full break-words mr-3 max-lg:justify-between">
+                                                            <div class="mt-8">
+                                                                <a class="max-lg:mt-0" href="/topic/<%= topic.id %>">
+                                                                    <%= topic.title %>
+                                                                </a>
+                                                            </div>
+                                                            <div
+                                                                class="flex justify-between items-center text-xs my-1 pt-7">
+                                                                <!--creation time of topic-->
+                                                                <div>
+                                                                    <% const minutesAgo=Math.floor((Date.now() - new
+                                                                        Date(topic.createdAt)) / 1000 / 60); %>
+                                                                        <div class="mr-2">
+                                                                            <% if (minutesAgo < 1) { %>
+                                                                                Just now
+                                                                                <% } else if (minutesAgo < 60) { %>
+                                                                                    <%= minutesAgo %> minutes ago
+                                                                                        <% } else if (minutesAgo < 1440)
+                                                                                            { %>
+                                                                                            <%= Math.floor(minutesAgo /
+                                                                                                60) %>
+                                                                                                hours
+                                                                                                ago
+                                                                                                <% } else { %>
+                                                                                                    <%= Math.floor(minutesAgo
+                                                                                                        / 1440) %>
+                                                                                                        days ago
+                                                                                                        <% } %>
+                                                                        </div>
 
-                                </div>
-                    </div>
-                    <div>
+                                                                </div>
+                                                                <!--last message time & user-->
+                                                                <div>
+                                                                    <div class="flex max-lg:flex-col">
+                                                                        <div class="mr-2">
+                                                                            <a
+                                                                                href="/user/<%= topic.comments[0].user.id %>">
+                                                                                @<%= topic.comments[0].user.userName %>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span>
+                                                                                <% if (Math.floor((Date.now() - new
+                                                                                    Date(topic.updatedAt)) / 1000 / 60)
+                                                                                    < 1 ) { %>
+                                                                                    <small class="mt-4 text-xs">just
+                                                                                        now</small>
+                                                                                    <% } else if (Math.floor((Date.now()
+                                                                                        - new Date(topic.updatedAt)) /
+                                                                                        1000 / 60) < 60 ) { %>
+                                                                                        <small class="mt-4 text-xs">
+                                                                                            <%= Math.floor((Date.now() -
+                                                                                                new
+                                                                                                Date(topic.updatedAt)) /
+                                                                                                1000 / 60) %> minutes
+                                                                                                ago
+                                                                                        </small>
+                                                                                        <% } else if
+                                                                                            (Math.floor((Date.now() -
+                                                                                            new Date(topic.updatedAt)) /
+                                                                                            1000 / 60 / 60) < 24) { %>
+                                                                                            <small class="mt-4 text-xs">
+                                                                                                <%= Math.floor((Date.now()
+                                                                                                    - new
+                                                                                                    Date(topic.updatedAt))
+                                                                                                    / 1000 / 60 / 60) %>
+                                                                                                    hours ago
+                                                                                            </small>
+                                                                                            <% } else { %>
+                                                                                                <small
+                                                                                                    class="mt-4 text-xs">
+                                                                                                    <%= Math.floor((Date.now()
+                                                                                                        - new
+                                                                                                        Date(topic.updatedAt))
+                                                                                                        / 1000 / 60 / 60
+                                                                                                        / 24) %> days
+                                                                                                        ago
+                                                                                                </small>
+                                                                                                <% } %>
+                                                                            </span>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--views and messages-->
+                                                    <div
+                                                        class="dark:text-[#92959E] max-lg:text-sm max-sm:text-xs pr-8 max-lg:hidden">
+                                                        <div
+                                                            class="flex flex-col justify-center  border-l-2 border-indigo-400 dark:border-[#444654] h-full">
+                                                            <div class="flex justify-between">
+                                                                <div class="px-4">Views:</div>
+                                                                <div>
+                                                                    <%= topic.views %>
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex justify-between">
+                                                                <div class="px-4">Messages:</div>
+                                                                <div>
+                                                                    <%= topic.messages %>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <% }) %>
+
+                                        </div>
+
+                            </div>
+
+                        </main>
                         <%- include('../partials/footer') %>
-                    </div>
-                    <input type="hidden" class="bg-teal-500" name="">
                 </div>
         </div>
     </body>
-
-    <script>
-        function starttopic() {
-            const topiccreate = document.getElementById("topiccreate")
-            if (topiccreate.classList.contains("hidden")) {
-                topiccreate.classList.add("block")
-                topiccreate.classList.remove("hidden")
-            }
-            else {
-                topiccreate.classList.remove("block")
-                topiccreate.classList.add("hidden")
-            }
-        }
-    </script>
+    <script src="../../public/js/startTopic.js"></script>
     <%- include('../partials/ck-editor') %>
 
 </html>

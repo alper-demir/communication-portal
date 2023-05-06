@@ -529,13 +529,35 @@ router.get("/popular-topics", async (req, res) => {
             order: [['Views', 'DESC']],
             limit: 20
         })
-        res.render("user/topics-list", {
+        res.render("user/topics", {
             topics,
             title: "Popular Topics"
         })
     }
     catch (error) {
         console.log(error)
+    }
+})
+
+router.post("/popular-topics", async (req, res) => {
+    const { title, content } = req.body
+    console.log(req.body)
+    try {
+        const createdTopic = await Topic.create({
+            title: title,
+            userId: req.session.userid
+        })
+        console.log("topicid" + createdTopic.id)
+        await Comment.create({
+            content: content,
+            topicId: createdTopic.id,
+            userId: req.session.userid
+        })
+        await Topic.increment('messages', { by: 1, where: { id: createdTopic.id } });
+        res.redirect("/popular-topics")
+    }
+    catch (error) {
+        console.log("Error occured during topic creation:", error)
     }
 })
 
@@ -563,13 +585,35 @@ router.get("/new-topics", async (req, res) => {
             order: [['createdAt', 'DESC']],
             limit: 20
         })
-        res.render("user/topics-list", {
+        res.render("user/topics", {
             topics,
             title: "New Topics"
         })
     }
     catch (error) {
         console.log(error)
+    }
+})
+
+router.post("/new-topics", async (req, res) => {
+    const { title, content } = req.body
+    console.log(req.body)
+    try {
+        const createdTopic = await Topic.create({
+            title: title,
+            userId: req.session.userid
+        })
+        console.log("topicid" + createdTopic.id)
+        await Comment.create({
+            content: content,
+            topicId: createdTopic.id,
+            userId: req.session.userid
+        })
+        await Topic.increment('messages', { by: 1, where: { id: createdTopic.id } });
+        res.redirect("/new-topics")
+    }
+    catch (error) {
+        console.log("Error occured during topic creation:", error)
     }
 })
 

@@ -3,81 +3,77 @@
 <%- include('../partials/head') %>
 
     <body>
-        <div class="flex flex-wrap dark:bg-[#343541]">
-            <div class="z-10 w-full">
-                <%- include('../partials/navbar') %>
-            </div>
-
+        <div class="flex">
+            <input type="hidden" id="recieverid" value="<%= id %>">
+            <input type="hidden" id="requesterid" value="<%= userId %>">
             <%- include('../partials/side') %>
-                <input type="hidden" id="recieverid" value="<%= id %>">
-                <input type="hidden" id="requesterid" value="<%= userId %>">
-                <div class="mt-8 flex-grow ml-64">
-                    <div class="min-h-[85vh]">
-                        <div class="flex flex-col items-center justify-center mt-28 text-center">
+
+            <div
+            class="w-full max-lg:ml-40 max-sm:ml-0 ml-60 p-2 min-h-screen max-lg:text-sm dark:bg-[#343541] dark:text-[#92959E]">
+            <%- include('../partials/navbar2') %>
+                <main class="flex flex-col justify-center items-center h-[80vh]">
+                    <div class="w-2/3 max-lg:w-3/4 break-words max-sm:w-5/6 max-md:text-xs max-lg:text-sm">
+
+                        <div class="flex flex-col items-center justify-center text-center">
                             <div
                                 class="border-2 border-indigo-400 p-6 rounded shadow-md text-gray-500 dark:text-[#92959E] dark:border-[#444654]">
                                 <p class="font-medium">
                                     <%= firstname %>
                                         <%= lastname %>
                                 </p>
-
-                                <p>
-                                    <img src="/public/images/<%= profileimage %>" alt=""
-                                        class="h-32 w-32 rounded-full object-cover my-3 inline-block ring-2 ring-teal-600">
-                                </p>
-                                <p class="text-sm my-1">Member since <%= createdAt %>
-                                </p>
-                                <p>
-                                    @<%= username %>
-                                </p>
-                                <!--buttons-->
-                                <% if (typeof isAuth !="undefined" ) { %>
-                                    <div class="flex justify-center items-center mt-3">
-                                        <% if (id !==userId) { %>
-                                            <a href="/chat/<%= id %>"
-                                                class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80 hover:cursor-pointer">Send
-                                                Message
-                                            </a>
-
-                                            <% if (!friendship) { %>
-
-                                                <% if (isRequest) { %>
-                                                    <button onclick="acceptFriendRequest()"
-                                                        class="px-2 bg-teal-700 text-white rounded mx-1 text-sm py-1 dark:bg-green-800 hover:opacity-80">
-                                                        <i class="fa-solid fa-check"></i>
-                                                    </button>
-                                                    <button onclick="rejectFriendRequest()"
-                                                        class="px-2 bg-red-700 text-white rounded mx-1 text-sm py-1 dark:bg-red-900 hover:opacity-80">
-                                                        <i class="fa-solid fa-xmark"></i>
-                                                    </button>
-                                                    <% } else{ %>
-                                                        <button onclick="sendFriendRequest()" id="btn-req"
-                                                            class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Friend
-                                                            Request
-                                                        </button>
-                                                        <% } %>
+                                <img src="/public/images/<%= profileimage %>" alt=""
+                                            class="h-32 w-32 max-sm:w-24 max-sm:h-24 max-lg:w-28 max-lg:h-28 rounded-full object-cover my-3 inline-block ring-2 ring-teal-600">
+                                        <p class="my-1">Member since <%= createdAt %>
+                                        </p>
+                                        <p>
+                                            @<%= username %>
+                                        </p>
+                                        <!--buttons-->
+                                        <% if (typeof isAuth !="undefined" ) { %>
+                                            <div class="flex justify-center items-center mt-3">
+                                                <% if (id !==userId) { %>
+                                                    <a href="/chat/<%= id %>"
+                                                        class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80 hover:cursor-pointer">Send
+                                                        Message
+                                                    </a>
+                                                    <% if (!friendship) { %>
+                                                        <% if (isRequest) { %>
+                                                            <button onclick="acceptFriendRequest()"
+                                                                class="px-2 bg-teal-700 text-white rounded mx-1 text-sm py-1 dark:bg-green-800 hover:opacity-80">
+                                                                <i class="fa-solid fa-check"></i>
+                                                            </button>
+                                                            <button onclick="rejectFriendRequest()"
+                                                                class="px-2 bg-red-700 text-white rounded mx-1 text-sm py-1 dark:bg-red-900 hover:opacity-80">
+                                                                <i class="fa-solid fa-xmark"></i>
+                                                            </button>
                                                             <% } else{ %>
-                                                                <button onclick="unFriend()" id="btn-unfriend"
-                                                                    class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">
-                                                                    Unfriend
+                                                                <button onclick="sendFriendRequest()" id="btn-req"
+                                                                    class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Friend
+                                                                    Request
                                                                 </button>
-                                                                <% } %>%>
-                                                                    <% } else{%>
-                                                                        <button
-                                                                            class="px-2 bg-green-800 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Edit
-                                                                            Profile</button>
-                                                                        <%}%>
-                                    </div>
-                                    <% } %>
+                                                                <% } %>
+                                                                    <% } else{ %>
+                                                                        <button onclick="unFriend()" id="btn-unfriend"
+                                                                            class="px-2 bg-sky-700 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">
+                                                                            Unfriend
+                                                                        </button>
+                                                                        <% } %>%>
+                                                                            <% } else{%>
+                                                                                <button
+                                                                                    class="px-2 bg-green-800 text-white rounded mx-1 text-sm py-1 dark:bg-cyan-900 hover:opacity-80">Edit
+                                                                                    Profile</button>
+                                                                                <%}%>
+                                            </div>
+                                            <% } %>
 
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <%- include('../partials/footer') %>
+                        </main>
+                        <%- include('../partials/footer') %>
+
                 </div>
         </div>
     </body>
-
     <script src="../../public/js/friendOperations.js"></script>
-
 </html>
