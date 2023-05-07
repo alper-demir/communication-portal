@@ -117,40 +117,49 @@ router.post("/topics", async (req, res) => {
 
 router.get("/topic/:id", async (req, res) => {
     const topicId = req.params.id
-
-    let visitedTopics = req.cookies.visited_topics || [];
-    if (!visitedTopics.includes(topicId)) {
-        Topic.increment('views', { where: { id: topicId } });
-        visitedTopics.push(topicId);
-        res.cookie('visited_topics', visitedTopics, { maxAge: 1000 * 60 * 60 }); // 60 min
+    try{
+        let visitedTopics = req.cookies.visited_topics || [];
+        if (!visitedTopics.includes(topicId)) {
+            Topic.increment('views', { where: { id: topicId } });
+            visitedTopics.push(topicId);
+            res.cookie('visited_topics', visitedTopics, { maxAge: 1000 * 60 * 60 }); // 60 min
+        }
+    
+        const comments = await Comment.findAll({
+            where: {
+                topicId: topicId
+            },
+            include: [
+                {
+                    model: Topic, include: {
+                        model: User,
+                        attributes: ['firstName', 'lastName',]
+                    },
+                    attributes: ['title', 'createdAt', 'id']
+                },
+                { model: User, attributes: ['userName', 'image', 'firstName', 'lastName','id'] }
+            ]
+        })
+        if(comments.length < 1){
+            res.redirect("/topics")
+        }
+        console.log(comments)
+        const date = new Date(comments[0].topic.createdAt)
+        const day = date.getDate()
+        const month = date.toLocaleString('en-GB', { month: 'long' })
+        const year = date.getFullYear()
+        const formattedDate = `${day} ${month} ${year} - ${date.toLocaleTimeString("tr-TR")}`
+        res.render("user/topic-details", {
+            title: comments[0].topic.title,
+            comments: comments,
+            date: formattedDate
+        })
     }
 
-    const comments = await Comment.findAll({
-        where: {
-            topicId: topicId
-        },
-        include: [
-            {
-                model: Topic, include: {
-                    model: User,
-                    attributes: ['firstName', 'lastName',]
-                },
-                attributes: ['title', 'createdAt', 'id']
-            },
-            { model: User, attributes: ['userName', 'image', 'firstName', 'lastName','id'] }
-        ]
-    })
-    console.log(comments)
-    const date = new Date(comments[0].topic.createdAt)
-    const day = date.getDate()
-    const month = date.toLocaleString('en-GB', { month: 'long' })
-    const year = date.getFullYear()
-    const formattedDate = `${day} ${month} ${year} - ${date.toLocaleTimeString("tr-TR")}`
-    res.render("user/topic-details", {
-        title: comments[0].topic.title,
-        comments: comments,
-        date: formattedDate
-    })
+    catch(err){
+        console.log(err)
+    }
+    
 })
 
 router.post("/topic/:id", async (req, res) => {

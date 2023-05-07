@@ -72,8 +72,8 @@ app.use("/", userRoutes)
 const testData = require("./data/test-data")
 
 async function sync() {
-    await sequelize.sync({ force: true })
-    await testData()
+    await sequelize.sync({ alter: true })
+    // await testData()
 }
 
 sync()
