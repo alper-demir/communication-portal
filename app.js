@@ -72,12 +72,12 @@ app.use("/", userRoutes)
 const testData = require("./data/test-data")
 
 async function sync() {
-    await sequelize.sync({ alter: true })
-    // await testData()
+    await sequelize.sync({ force: true })
+    await testData()
 }
 
 sync()
 
 server.listen(process.env.PORT, () => {
-    console.log("sunucu 3000 de aktif")
+    console.log(`server running on ${process.env.PORT}`)
 })
