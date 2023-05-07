@@ -1,43 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="dark">
 <%- include('../partials/head') %>
 
     <body>
-        <div class="flex flex-wrap dark:bg-[#343541]">
-
-            <div class="z-10 w-full">
-                <%- include('../partials/navbar') %>
-            </div>
-
+        <div class="flex">
             <%- include('../partials/side') %>
-                <div class="flex-grow ml-64">
-                    <input type="hidden" id="userId" value="<%= userId %>">
-                    <input type="hidden" id="roomId" value="<%= roomId %>">
-                    <input type="hidden" id="friendId" value="<%= friendId %>">
-                    <div class="h-[85vh] mb-20 mt-5 dark:bg-[#343541]">
-                        <div class="flex justify-center h-[85vh] relative">
-                            <div class="bg-sky-200 dark:bg-[#5c5f75] dark:bg-opacity-20 w-3/5 py-8 overflow-y-auto rounded"
-                                id="sc">
+            <input type="hidden" id="userId" value="<%= userId %>">
+            <input type="hidden" id="roomId" value="<%= roomId %>">
+            <input type="hidden" id="friendId" value="<%= friendId %>">
+                <div
+                    class="w-full max-lg:ml-40 max-sm:ml-0 ml-60 p-2 min-h-screen max-lg:text-sm dark:bg-[#343541] dark:text-[#92959E]">
+                    <%- include('../partials/navbar2') %>
+                        <main class="flex flex-col  items-center my-20 min-h-[80vh]">
+                            <div class="w-1/2 max-lg:w-3/4 break-all max-sm:w-5/6 max-md:text-xs max-lg:text-sm">
 
-                                <div class="mb-10" id="messageList"></div>
-                                <form id="messageForm" class="absolute bottom-1 flex px-2 w-3/5 mb-3">
-                                    <input id="messageInput" type="text"
-                                        class="rounded-2xl w-full mr-3 py-1 px-3 break-all">
-                                    <button
-                                        class="py-1 px-3 bg-sky-500 text-white dark:bg-cyan-800 rounded hover:opacity-80 mr-5">Send</button>
-                                </form>
+                                <div class="flex flex-col justify-center h-[70vh] relative">
+                                    <div class="bg-sky-200 dark:bg-[#5c5f75] dark:bg-opacity-20 py-8 overflow-y-auto rounded" id="sc">
+        
+                                        <div id="messageList"></div>
+                                        
+                                    </div>
+                                    <form id="messageForm" class="flex mt-1">
+                                        <input id="messageInput" type="text"
+                                            class="rounded w-full mr-1 py-1 px-3 bg-[#3C3D4B]">
+                                        <button
+                                            class="py-1 px-3 max-sm:px-1 bg-sky-500 text-white dark:bg-cyan-800 rounded hover:opacity-80 w-1/5">Send</button>
+                                    </form>
+                                </div>
+
                             </div>
-                        </div>
-                    </div>
 
-                    <div>
+                        </main>
                         <%- include('../partials/footer') %>
-                    </div>
-                    
                 </div>
+        </div>
     </body>
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="../../public/js/getMessages.js"></script>
 

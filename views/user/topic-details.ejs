@@ -1,88 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="dark">
 <%- include('../partials/head') %>
 
     <body>
-        <div class="flex flex-wrap dark:bg-[#343541]">
-            <div class="z-10 w-full">
-                <%- include('../partials/navbar') %>
-            </div>
-
+        <div class="flex">
             <%- include('../partials/side') %>
 
-                <div class="mt-8 flex-grow ml-64">
-                    <div class="min-h-[85vh] mb-40">
-                        <div class="w-2/3 mx-auto p-2 mt-5">
-                            <h4 class="font-bold text-2xl dark:text-slate-500 break-words">
-                                <%= comments[0].topic.title %>
-                            </h4>
-                            <small><span class="text-xs dark:text-[#92959E]">
-                                    <%= comments[0].topic.user.firstName %>
-                                        <%= comments[0].topic.user.lastName %> / <%= date %>
-                                </span></small>
-                        </div>
-                        <!--Comments-->
-                        <% for( let index=0; index < comments.length; index++ ) { %>
-                            <div class="w-2/3 mx-auto overflow-hidden p-1">
-                                <section
-                                    class="flex justify-center border-2 border-indigo-400 rounded dark:border-[#444654]">
-                                    <aside
-                                        class="border-r-2 border-indigo-400 p-6 text-center min-w-[13rem] max-w-[13rem] dark:border-[#444654]">
-                                        <div class="flex flex-col items-center">
-                                            <a href="/user/<%= comments[index].user.id %>">
-                                                <img src="../../public/images/<%= comments[index].user.image %>" alt=""
-                                                    class="object-cover h-24 w-24 rounded-full my-2 ring-2 ring-green-400 max-md:h-12 max-md:w-12 dark:ring-sky-800">
-                                            </a>
-                                            <span class="text-sm text-[#92959E]">
-                                                <%= comments[index].user.firstName %>
-                                                    <%= comments[index].user.lastName %>
-                                            </span>
-                                            <a href="/user/<%= comments[index].user.id %>">
-                                                <small class="text-gray-500 dark:text-[#92959E]">
-                                                    @<%= comments[index].user.userName %>
-                                                </small>
-                                            </a>
-                                        </div>
-                                    </aside>
-                                    <div class="flex flex-col w-full dark:text-[#92959E]">
-                                        <div
-                                            class="border-b-2 border-indigo-400 text-end flex justify-between p-2 items-center dark:border-[#444654]">
-                                            <div class="text-xs">
-                                                <%= comments[index].createdAt.toLocaleString() %>
-                                            </div>
-                                            <div>#<%= index + 1 %>
-                                            </div>
-                                        </div>
-                                        <div class="p-5">
-                                            <%- comments[index].content %>
-                                        </div>
-                                    </div>
+                <div
+                    class="w-full max-lg:ml-40 max-sm:ml-0 ml-60 p-2 min-h-screen max-lg:text-sm dark:bg-[#343541] dark:text-[#92959E]">
+                    <%- include('../partials/navbar2') %>
+                        <main class="flex flex-col  items-center my-20 min-h-screen">
+                            <div class="w-2/3 max-lg:w-3/4 break-words max-sm:w-5/6 max-md:text-xs max-lg:text-sm">
 
-                                </section>
-                            </div>
-                            <% } %>
-                                <div>
-                                    <% if (typeof isAuth !="undefined" ) { %>
-                                        <form method="post" class="w-2/3 mx-auto p-2 mt-5">
-                                            <input type="hidden" name="topicid" value="<%= comments[0].topic.id %>">
-                                            <div class="relative my-2">
-                                                <textarea id="editor" name="content" placeholder="Comment"></textarea>
-                                            </div>
-                                            <button type="submit"
-                                                class="px-2 py-1 bg-blue-800 rounded text-white hover:-translate-y-[2px] transition-all">Comment</button>
-                                        </form>
-                                        <% } %>
+                                <div class="mx-auto p-2 mt-5">
+                                    <h4 class="font-bold text-2xl max-lg:text-xl max-md:text-lg dark:text-slate-500 break-words">
+                                        <%= comments[0].topic.title %>
+                                    </h4>
+                                    <span class="text-xs dark:text-[#92959E] max-sm:text-[0.65rem]">
+                                        <%= comments[0].topic.user.firstName %>
+                                            <%= comments[0].topic.user.lastName %> / <%= date %>
+                                    </span>
                                 </div>
 
-                    </div>
-                    <div>
+                                <div class="border-2 border-indigo-400 dark:border-[#444654] rounded break-all">
+                                    <% for( let index=0; index < comments.length; index++ ) { %>
+                                        <section
+                                            class="flex justify-center border-b-2 border-indigo-400 rounded dark:border-[#444654]">
+                                            <aside
+                                                class="border-r-2 border-indigo-400 p-8 text-center min-w-fit dark:border-[#444654] max-md:p-4 max-sm:p-2 max-sm:pt-4">
+                                                <div class="flex flex-col items-center">
+                                                    <a href="/user/<%= comments[index].user.id %>">
+                                                        <img src="../../public/images/<%= comments[index].user.image %>"
+                                                            alt=""
+                                                            class="object-cover h-24 w-24 rounded-full my-2 ring-2 ring-sky-500 max-md:h-12 max-md:w-12 max-sm:h-10 max-sm:w-10 dark:ring-sky-800">
+                                                    </a>
+                                                    <span class="text-[#92959E]">
+                                                        <%= comments[index].user.firstName %>
+                                                            <%= comments[index].user.lastName %>
+                                                    </span>
+                                                    <a href="/user/<%= comments[index].user.id %>">
+                                                        <small class="text-gray-500 dark:text-[#92959E]">
+                                                            @<%= comments[index].user.userName %>
+                                                        </small>
+                                                    </a>
+                                                </div>
+                                            </aside>
+                                            <div class="flex flex-col w-full dark:text-[#92959E]">
+                                                <div
+                                                    class="border-b-2 border-indigo-400 text-end flex justify-between p-2 items-center dark:border-[#444654] text-xs max-md:text-[0.65rem]">
+                                                    <div>
+                                                        <%= comments[index].createdAt.toLocaleString() %>
+                                                    </div>
+                                                    <div>#<%= index + 1 %>
+                                                    </div>
+                                                </div>
+                                                <div class="p-5 max-md:p-3">
+                                                    <%- comments[index].content %>
+                                                </div>
+                                            </div>
+
+                                        </section>
+                                        <% } %>
+
+                                        <div>
+                                            <% if (typeof isAuth !="undefined" ) { %>
+                                                <form method="post" class="mx-auto p-2">
+                                                    <input type="hidden" name="topicid" value="<%= comments[0].topic.id %>">
+                                                    <div class="relative my-2">
+                                                        <textarea id="editor" name="content" placeholder="Comment"></textarea>
+                                                    </div>
+                                                    <button type="submit"
+                                                        class="px-2 py-1 bg-blue-800 rounded text-white hover:-translate-y-[2px] transition-all">Comment</button>
+                                                </form>
+                                                <% } %>
+                                        </div>
+
+                                </div>
+                            </div>
+
+                        </main>
                         <%- include('../partials/footer') %>
-                    </div>
+
                 </div>
         </div>
     </body>
-
     <%- include('../partials/ck-editor') %>
-
 </html>
