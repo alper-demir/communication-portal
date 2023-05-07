@@ -22,7 +22,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
+    "start": "node app.js",
+    "development": "nodemon app.js",
     "tailwind": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
   },
   "keywords": [],
