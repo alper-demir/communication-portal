@@ -35,9 +35,7 @@
                                     <div class="relative my-2">
                                         <input type="text"
                                             class="px-2 py-2 peer w-64 max-sm:w-56 outline-white outline-1 border-2 rounded bg-transparent"
-                                            name="email" required value="<% if (typeof email != "undefined") {%>
-                                        <%= email %>
-                                            <% }%>">
+                                            name="email" required value="<% if (typeof email != "undefined"){%><%= email %><% }%>">
                                                 <small
                                                     class="absolute top-[0.70rem] left-3 max-sm:left-3 peer-valid:text-xs peer-valid:transition-all peer-valid:top-[0.15rem] peer-valid:left-1 max-sm:peer-valid:left-1 peer-valid:my-[-3px] select-none">email</small>
                                     </div>
@@ -45,9 +43,7 @@
                                     <div class="relative my-2">
                                         <input type="password"
                                             class="px-2 py-2 peer w-64 max-sm:w-56 outline-white outline-1 border-2 rounded bg-transparent"
-                                            name="password" required value="<% if (typeof password != "undefined") { %>
-                                        <%= password %>
-                                            <% } %>">
+                                            name="password" required value="<% if (typeof password != "undefined"){%><%= password %><% }%>">
                                                 <small
                                                     class="absolute top-[0.70rem] left-3 max-sm:left-3 peer-valid:text-xs peer-valid:transition-all peer-valid:top-[0.15rem] peer-valid:left-1 max-sm:peer-valid:left-1 peer-valid:my-[-3px] select-none">password</small>
                                     </div>
