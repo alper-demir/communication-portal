@@ -41,3 +41,15 @@ window.addEventListener("load", async () => {
         index++
     });
 })
+
+const showReq = () => {
+    const req = document.getElementById("requests")
+    if (req.classList.contains("hidden")) {
+        req.classList.remove("hidden")
+        req.classList.add("block")
+    }
+    else {
+        req.classList.add("hidden")
+        req.classList.remove("block")
+    }
+}

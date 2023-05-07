@@ -1,4 +1,4 @@
-<div class="w-60 max-sm:-translate-x-60 max-lg:w-40 h-screen fixed min-w-fit max-sm:max-w-fit text-black transition-transform duration-500 break-all max-sm:text-sm" id="side-container">
+<div class="w-60 max-sm:-translate-x-60 max-lg:w-40 h-screen fixed min-w-fit max-sm:max-w-fit text-black transition-transform duration-500 break-all max-sm:text-sm z-10" id="side-container">
     <aside
         class="p-2 pt-28 max-sm:w-44 dark:bg-[#202123] h-full border-r-2 dark:border-black bg-white"
         id="orgside">
@@ -46,22 +46,11 @@
         </div>
     </aside>
 
+    <div class=" mt-5 hidden max-sm:block dark:text-white absolute left-5 top-[1.2rem] transition-none">
+        <a href="#"> <i class="fas fa-bars" onclick="showSide()"></i> </a>
+    </div>
+
 </div>
-
-<script>
-    const showReq = () => {
-        const req = document.getElementById("requests")
-        if (req.classList.contains("hidden")) {
-            req.classList.remove("hidden")
-            req.classList.add("block")
-        }
-        else {
-            req.classList.add("hidden")
-            req.classList.remove("block")
-        }
-    }
-
-</script>
 
 <script src="../../public/js/request-actions.js"></script>
 <script src="../../public/js/friends.js"></script>

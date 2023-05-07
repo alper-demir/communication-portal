@@ -15,16 +15,16 @@
                             <div class="w-1/2 max-lg:w-3/4 break-all max-sm:w-5/6 max-md:text-xs max-lg:text-sm">
 
                                 <div class="flex flex-col justify-center h-[70vh] relative">
-                                    <div class="bg-sky-200 dark:bg-[#5c5f75] dark:bg-opacity-20 py-8 overflow-y-auto rounded" id="sc">
+                                    <div class="bg-gray-200 dark:bg-[#5c5f75] bg-opacity-60 dark:bg-opacity-20 py-8 overflow-y-auto rounded h-full" id="sc">
         
                                         <div id="messageList"></div>
                                         
                                     </div>
                                     <form id="messageForm" class="flex mt-1">
                                         <input id="messageInput" type="text"
-                                            class="rounded w-full mr-1 py-1 px-3 bg-[#3C3D4B]">
+                                            class="rounded w-full mr-1 py-1 px-3 dark:bg-[#3C3D4B] bg-gray-200">
                                         <button
-                                            class="py-1 px-3 max-sm:px-1 bg-sky-500 text-white dark:bg-cyan-800 rounded hover:opacity-80 w-1/5">Send</button>
+                                            class="py-1 px-3 max-sm:px-1 bg-indigo-500 text-white dark:bg-indigo-800 rounded hover:opacity-80 w-1/5">Send</button>
                                     </form>
                                 </div>
 
@@ -65,10 +65,10 @@
                 div.className = "flex px-4"
                 const img = document.createElement("img")
                 img.src = "../../public/images/<%= friendImage %>"
-                img.className = "w-9 h-9 rounded-full object-cover mr-1 ring-1 ring-orange-500"
+                img.className = "w-8 h-8 rounded-full object-cover mr-1 ring-1 ring-orange-500"
                 div.appendChild(img)
             }
-            p.className = "bg-green-100 dark:bg-[#444654] dark:text-white py-1 px-3 inline-block rounded-lg mb-4 max-w-[20rem]"
+            p.className = "bg-indigo-500 dark:bg-[#444654] text-white py-1 px-3 inline-block rounded-lg mb-4 max-w-[20rem]"
             p.innerText = `${data.message}`
             div.appendChild(p)
             messageList.appendChild(div)
