@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
     })
 })
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
     const { email, password } = req.body
     try {
         const user = await User.findOne({
@@ -93,7 +93,7 @@ router.get("/topics", async (req, res) => {
     })
 })
 
-router.post("/topics", async (req, res) => {
+router.post("/topics", auth, async (req, res) => {
     const { title, content } = req.body
     console.log(req.body)
     try {
@@ -117,14 +117,14 @@ router.post("/topics", async (req, res) => {
 
 router.get("/topic/:id", async (req, res) => {
     const topicId = req.params.id
-    try{
+    try {
         let visitedTopics = req.cookies.visited_topics || [];
         if (!visitedTopics.includes(topicId)) {
             Topic.increment('views', { where: { id: topicId } });
             visitedTopics.push(topicId);
             res.cookie('visited_topics', visitedTopics, { maxAge: 1000 * 60 * 60 }); // 60 min
         }
-    
+
         const comments = await Comment.findAll({
             where: {
                 topicId: topicId
@@ -137,10 +137,10 @@ router.get("/topic/:id", async (req, res) => {
                     },
                     attributes: ['title', 'createdAt', 'id']
                 },
-                { model: User, attributes: ['userName', 'image', 'firstName', 'lastName','id'] }
+                { model: User, attributes: ['userName', 'image', 'firstName', 'lastName', 'id'] }
             ]
         })
-        if(comments.length < 1){
+        if (comments.length < 1) {
             res.redirect("/topics")
         }
         console.log(comments)
@@ -156,13 +156,13 @@ router.get("/topic/:id", async (req, res) => {
         })
     }
 
-    catch(err){
+    catch (err) {
         console.log(err)
     }
-    
+
 })
 
-router.post("/topic/:id", async (req, res) => {
+router.post("/topic/:id", auth, async (req, res) => {
     const { content, topicid } = req.body
 
     try {
@@ -463,22 +463,42 @@ router.get("/api/messages/:room", async (req, res) => {
 })
 
 router.post("/api/messages-notify/:user", async (req, res) => {
-    const id = req.params.user
+    const id = req.params.user;
     try {
-        const notification = await Messages.findAll({
+        const notifications = await Messages.findAll({
             where: {
                 receiverId: id,
-                isRead: false
+                isRead: false,
             },
-        })
-        if (notification) {
-            res.status(200).send(notification)
-        }
+            include: {
+                model: User,
+                as: "friend",
+                attributes: ['id', 'userName']
+            },
+        });
+
+        const roomCounts = {};
+        notifications.forEach((notification) => {
+            const roomId = notification.roomId;
+            if (roomCounts[roomId]) {
+                roomCounts[roomId]++;
+            } else {
+                roomCounts[roomId] = 1;
+            }
+        });
+
+        const result = Object.keys(roomCounts).map((roomId) => ({
+            roomId: roomId,
+            count: roomCounts[roomId],
+            senderId: notifications.find((n) => n.roomId === roomId)?.senderId,
+            friend: notifications.find((n) => n.roomId === roomId)?.friend,
+        }));
+
+        res.status(200).send(result);
+    } catch (error) {
+        console.log("notification error" + error);
     }
-    catch (error) {
-        console.log("notification error" + error)
-    }
-})
+});
 
 router.get("/search", async (req, res) => {
     const key = req.query.q
@@ -548,7 +568,7 @@ router.get("/popular-topics", async (req, res) => {
     }
 })
 
-router.post("/popular-topics", async (req, res) => {
+router.post("/popular-topics", auth, async (req, res) => {
     const { title, content } = req.body
     console.log(req.body)
     try {
@@ -604,7 +624,7 @@ router.get("/new-topics", async (req, res) => {
     }
 })
 
-router.post("/new-topics", async (req, res) => {
+router.post("/new-topics", auth, async (req, res) => {
     const { title, content } = req.body
     console.log(req.body)
     try {
@@ -624,6 +644,23 @@ router.post("/new-topics", async (req, res) => {
     catch (error) {
         console.log("Error occured during topic creation:", error)
     }
+})
+
+router.post("/api/update-message-status", async (req, res) => {
+    const { roomId, receiverId } = req.body
+    console.log("message update : " + roomId, receiverId)
+    try {
+        await Messages.update({ isRead: true }, {
+            where: {
+                roomId,
+                receiverId,
+            }
+        })
+    }
+    catch (error) {
+        console.log(error)
+    }
+
 })
 
 module.exports = router

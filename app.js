@@ -4,6 +4,8 @@ app.use(express.urlencoded({ extended: false }))
 const dotenv = require('dotenv').config()
 const session = require("express-session")
 const sequelize = require("./data/db")
+const axios = require("axios")
+
 
 
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
@@ -16,15 +18,18 @@ const io = socketio(server)
 
 io.on('connection', (socket) => {
     console.log(`Socket connected: ${socket.id}`);
-
     socket.on('joinRoom', (roomId) => {
         socket.join(roomId);
+        socket.emit('updateMessageStatus', { roomId: roomId });
         console.log(`Socket ${socket.id} joined room: ${roomId}`);
     });
 
-    socket.on('message', (messageData) => {
+    socket.on('message', async (messageData) => {
         console.log(`Message received: ${messageData.message, messageData.roomId}`);
-        io.to(messageData.roomId).emit('message', messageData);
+        const sockets = await io.in(messageData.roomId).fetchSockets();
+        const socketIds = sockets.map(socket => socket.id);
+
+        io.to(messageData.roomId).emit('message', { ...messageData, length: socketIds.length });
     });
 
     socket.on('disconnect', () => {

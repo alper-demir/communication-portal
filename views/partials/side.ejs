@@ -1,7 +1,6 @@
-<div class="w-60 max-sm:-translate-x-60 max-lg:w-40 h-screen fixed min-w-fit max-sm:max-w-fit text-black transition-transform duration-500 break-all max-sm:text-sm z-10" id="side-container">
-    <aside
-        class="p-2 pt-28 max-sm:w-44 dark:bg-[#202123] h-full border-r-2 dark:border-black bg-white"
-        id="orgside">
+<div class="w-60 max-sm:-translate-x-60 max-lg:w-40 h-screen fixed min-w-fit max-sm:max-w-fit text-black transition-transform duration-500 break-all max-lg:text-sm max-sm:text-xs z-10"
+    id="side-container">
+    <aside class="p-2 pt-28 max-sm:w-44 dark:bg-[#202123] h-full border-r-2 dark:border-black bg-white" id="orgside">
         <input type="hidden" name="" id="userid" value="<%= userId %>">
         <div>
             <ul class="font-medium pl-2 dark:text-white">
@@ -12,36 +11,48 @@
                     <form action="/search" method="get">
                         <input type="text" name="q" placeholder="Search"
                             class="bg-gray-200 rounded pl-2 py-1 dark:bg-[#40414F] outline-1 max-lg:w-32 w-44">
-                            <button type="submit" class="max-sm:ml-1 ml-2"><i class="fas fa-search"></i></button>
+                        <button type="submit" class="max-sm:ml-1 ml-2"><i class="fas fa-search"></i></button>
                     </form>
                 </li>
                 <div>
                     <% if (typeof isAuth !="undefined" ) { %>
-                        <li class="mt-12 select-none hover:cursor-pointer inline-block" onclick="showFriendList()">
+                        <li class="mt-12 select-none hover:cursor-pointer inline-block max-sm:mt-6" onclick="showFriendList()">
                             <span>My Friends</span> <span>(<span id="online-count">0</span>/<span
                                     id="total-count">0</span>)</span>
                         </li>
                 </div>
-                <div id="friendsList" class="hidden">
+                <div id="friendsList" class="hidden max-h-16 overflow-auto">
                     <ul>
                     </ul>
                 </div>
                 <% if (typeof isAuth !="undefined" ) { %>
-                    <li class="mt-12 select-none hover:cursor-pointer inline-block" onclick="showReq()">
+                    <li class="mt-12 select-none hover:cursor-pointer inline-block max-sm:mt-6" onclick="showReq()">
                         <span>Requests</span> <span id="request-count">(0)</span>
                     </li>
                     <% } %>
-                    <div id="requests" class="hidden">
-                        <ul>
+                        <div id="requests" class="hidden max-h-16 overflow-auto">
+                            <ul>
 
-                        </ul>
-                    </div>
-                    <li class="fixed bottom-32"><a href="/">Settings</a></li>
-                        <% } %>
-                            <div onclick="changeColorMode()" id="colormode"
-                                class="fixed bottom-12 left-8 bg-gray-100 p-3 hover:bg-gray-200 transition-all rounded-xl hover:cursor-pointer w-16 text-center dark:bg-[#343541] dark:hover:bg-[#55565e]">
-                                <i id="coloricon" class="fa-regular fa-moon fa-2xl text-black"></i>
-                            </div>
+                            </ul>
+                        </div>
+
+                        <% if (typeof isAuth !="undefined" ) { %>
+                            <li class="mt-12 select-none hover:cursor-pointer block max-sm:mt-6" onclick="showNotifications()">
+                                <span>Notifications</span> <span id="notification-count">(0)</span>
+                            </li>
+                            <% } %>
+                                <div id="notificationArea" class="hidden max-h-16 overflow-auto">
+                                    <ul>
+
+                                    </ul>
+                                </div>
+
+                                <li class="fixed bottom-32"><a href="/">Settings</a></li>
+                                <% } %>
+                                    <div onclick="changeColorMode()" id="colormode"
+                                        class="fixed bottom-12 left-8 bg-gray-100 p-3 hover:bg-gray-200 transition-all rounded-xl hover:cursor-pointer w-16 text-center dark:bg-[#343541] dark:hover:bg-[#55565e]">
+                                        <i id="coloricon" class="fa-regular fa-moon fa-2xl text-black"></i>
+                                    </div>
             </ul>
         </div>
     </aside>
