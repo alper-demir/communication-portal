@@ -9,9 +9,13 @@ const Messages = require("../models/messages")
 const auth = require("../middlewares/auth")
 const { Op } = require("sequelize")
 const bcrypt = require("bcrypt")
+const imageUpload = require("../public/js/image-upload")
 
 router.get("/", (req, res) => {
-    res.render("auth/login", {
+    if (req.session.isAuth) {
+        return res.redirect("/topics")
+    }
+    return res.render("auth/login", {
         title: "Login",
     })
 })
@@ -661,6 +665,92 @@ router.post("/api/update-message-status", async (req, res) => {
         console.log(error)
     }
 
+})
+
+router.get("/profile", auth, async (req, res) => {
+    const userId = req.session.userid
+    const message = req.session.message
+    delete req.session.message
+    try {
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        })
+        let dateString = ''
+        if (user) {
+            const date = new Date(user.createdAt)
+            const updatedDate = new Date(user.updatedAt)
+            dateString = date.toLocaleString()
+            updatedDateString = updatedDate.toLocaleString()
+        }
+        res.render("user/profile-edit", {
+            title: "Profile Edit",
+            user,
+            date: dateString,
+            updatedDate: updatedDateString,
+            message
+        })
+
+    }
+    catch (error) {
+        console.log(error)
+    }
+
+})
+
+router.post("/profile", imageUpload.upload.single("image"), async (req, res) => {
+    const { firstName, lastName, email, userName, password, passwordConfirm } = req.body
+    const userId = req.session.userid
+
+    try {
+
+        const user = await User.findOne({
+            where: {
+                id: userId
+            },
+            attributes: ['password','image']
+        })
+
+        let image = ''
+        if (req.file) {
+            image = req.file.filename;
+        }
+        else {
+            image = user.image
+        }
+
+        const compare = await bcrypt.compare(passwordConfirm, user.password)
+
+        if (compare) {
+            const update = await User.update({
+                firstName,
+                lastName,
+                email,
+                userName,
+                password: await bcrypt.hash(password, 10),
+                image,
+            }, {
+                where: {
+                    id: userId
+                }
+            })
+            if (update) {
+                req.session.image = image
+                req.session.message = "Profile updated successfully!"
+            }
+            
+        }
+        else {
+            req.session.message = "An error occurred while updating the profile."
+        }
+        res.redirect("/profile")
+        
+
+    }
+    catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router
