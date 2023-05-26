@@ -1694,6 +1694,14 @@ video {
     width: 14rem;
   }
 
+  .max-sm\:w-\[101px\] {
+    width: 101px;
+  }
+
+  .max-sm\:w-\[90px\] {
+    width: 90px;
+  }
+
   .max-sm\:max-w-fit {
     max-width: -moz-fit-content;
     max-width: fit-content;
