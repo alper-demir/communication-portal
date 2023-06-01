@@ -427,12 +427,13 @@ router.get("/chat/:friendId", auth, async (req, res) => {
     const friendId = req.params.friendId
     const userId = req.session.userid;
     const roomId = [userId, friendId].sort().join("-");
-    const friend = await User.findByPk(friendId, { attributes: ['image', 'id'] })
+    const friend = await User.findByPk(friendId, { attributes: ['image', 'id', 'firstName'] })
     res.render("user/chat", {
         title: roomId,
         roomId,
         friendImage: friend.image,
-        friendId: friend.id
+        friendId: friend.id,
+        name: friend.firstName
     })
 })
 
@@ -709,7 +710,7 @@ router.post("/profile", imageUpload.upload.single("image"), async (req, res) => 
             where: {
                 id: userId
             },
-            attributes: ['password','image']
+            attributes: ['password', 'image']
         })
 
         let image = ''
@@ -739,13 +740,13 @@ router.post("/profile", imageUpload.upload.single("image"), async (req, res) => 
                 req.session.image = image
                 req.session.message = "Profile updated successfully!"
             }
-            
+
         }
         else {
             req.session.message = "An error occurred while updating the profile."
         }
         res.redirect("/profile")
-        
+
 
     }
     catch (error) {

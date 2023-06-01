@@ -5,7 +5,10 @@ const bcrypt = require("bcrypt")
 
 
 router.get("/register", (req, res) => {
-    res.render("auth/register", {
+    if (req.session.isAuth) {
+        return res.redirect("/topics")
+    }
+    return res.render("auth/register", {
         title: "Register"
     })
 })
@@ -44,7 +47,10 @@ router.post("/register", async (req, res) => {
 })
 
 router.get("/login", (req, res) => {
-    res.render("auth/login", {
+    if (req.session.isAuth) {
+        return res.redirect("/topics")
+    }
+    return res.render("auth/login", {
         title: "Login"
     })
 })

@@ -26,12 +26,12 @@ const req = async () => {
 
         onlineFriends.forEach((friend) => {
             const onlineClass = "bg-teal-500";
-            listItems += `<li><div class="w-2 h-2 rounded-full ${onlineClass} inline-block"></div> <a href="/chat/${friend.friend.id}"> ${friend.friend.userName} </a> </li>`
+            listItems += `<li><div online="1" class="${onlineClass}"></div> <a href="/chat/${friend.friend.id}"> ${friend.friend.userName} </a> </li>`
         })
 
         offlineFriends.forEach((friend) => {
             const onlineClass = "bg-gray-600";
-            listItems += `<li><div class="w-2 h-2 rounded-full ${onlineClass} inline-block"></div> <a href="/chat/${friend.friend.id}"> ${friend.friend.userName} </a></li>`
+            listItems += `<li><div class="${onlineClass}"></div> <a href="/chat/${friend.friend.id}"> ${friend.friend.userName} </a></li>`
         })
 
         friendsList.innerHTML = `<ul>${listItems}</ul>`
