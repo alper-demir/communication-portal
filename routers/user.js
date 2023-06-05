@@ -15,56 +15,7 @@ router.get("/", (req, res) => {
     if (req.session.isAuth) {
         return res.redirect("/topics")
     }
-    return res.render("auth/login", {
-        title: "Login",
-    })
-})
-
-router.post("/", auth, async (req, res) => {
-    const { email, password } = req.body
-    try {
-        const user = await User.findOne({
-            where: {
-                email: email
-            }
-        })
-        if (!user) {
-            return res.render("auth/login", {
-                message: {
-                    text: "Please check your informations",
-                    type: "Warning"
-                },
-                title: "Login",
-                email: email,
-                password: password
-            }
-            )
-        }
-        const compare = await bcrypt.compare(password, user.password)
-        if (!compare) {
-            return res.render("auth/login", {
-                message: {
-                    text: "Password is wrong",
-                    type: "Warning"
-                },
-                title: "Login",
-                email: email,
-                password: password
-
-            }
-            )
-        }
-        req.session.isAuth = true
-        req.session.image = user.image
-        req.session.username = user.userName
-        req.session.userid = user.id
-        console.log("auth: " + req.session.isAuth)
-        await User.update({ online: true }, { where: { id: user.id } })
-        return res.redirect("/topics")
-    }
-    catch (error) {
-        console.log(error)
-    }
+    return res.redirect("/auth/login")
 })
 
 router.get("/topics", async (req, res) => {
@@ -751,6 +702,30 @@ router.post("/profile", imageUpload.upload.single("image"), async (req, res) => 
     }
     catch (error) {
         console.log(error)
+    }
+})
+
+router.post("/api/edit-comment", async (req, res) => {
+    const { editedText, commentId } = req.body
+    console.log(editedText)
+    console.log(commentId)
+    //veriler şu an geliyor veritabanına kaydını yap.
+
+    try {
+        let date = new Date()
+        let editedDate = date.toString()
+        const editComment = await Comment.update({ content: editedText, isEdited: true, editedDate, }, {
+            where: {
+                id: commentId,
+            }
+        })
+        if (editComment) {
+            res.status(200).send({ message: "Comment edited successfully" })
+        }
+    }
+    catch (error) {
+        res.status(404).send({ message: "An error occured during editing" })
+        console.log("An error occured during text edit: " + error)
     }
 })
 

@@ -563,6 +563,10 @@ video {
   left: -0.5rem;
 }
 
+.bottom-1 {
+  bottom: 0.25rem;
+}
+
 .bottom-12 {
   bottom: 3rem;
 }
@@ -581,6 +585,10 @@ video {
 
 .left-8 {
   left: 2rem;
+}
+
+.right-2 {
+  right: 0.5rem;
 }
 
 .top-14 {
@@ -890,12 +898,20 @@ video {
           user-select: none;
 }
 
+.resize-none {
+  resize: none;
+}
+
 .flex-col {
   flex-direction: column;
 }
 
 .flex-nowrap {
   flex-wrap: nowrap;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .items-center {
@@ -1116,6 +1132,10 @@ video {
   padding-bottom: 2rem;
 }
 
+.pb-14 {
+  padding-bottom: 3.5rem;
+}
+
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -1325,6 +1345,11 @@ video {
 
 .hover\:translate-x-1:hover {
   --tw-translate-x: 0.25rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.hover\:translate-x-\[2px\]:hover {
+  --tw-translate-x: 2px;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -1631,6 +1656,10 @@ video {
     padding: 1rem;
   }
 
+  .max-md\:pb-12 {
+    padding-bottom: 3rem;
+  }
+
   .max-md\:text-\[0\.65rem\] {
     font-size: 0.65rem;
   }
@@ -1723,6 +1752,10 @@ video {
 
   .max-sm\:flex-col {
     flex-direction: column;
+  }
+
+  .max-sm\:p-1 {
+    padding: 0.25rem;
   }
 
   .max-sm\:p-2 {

@@ -18,6 +18,16 @@ const Comment = sequelize.define('comments', {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  isEdited: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  editedDate: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    defaultValue: null
   }
 });
 

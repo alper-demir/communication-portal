@@ -20,18 +20,20 @@
                                             class="h-32 w-32 max-sm:w-24 max-sm:h-24 max-lg:w-28 max-lg:h-28 rounded-full object-cover my-3 inline-block">
                                         <p class="my-1 text-sm max-sm:text-xs">Your account has been created at <%= date %>
                                         </p>
-                                        <p class="my-1 text-sm max-sm:text-xs">Last entrance: <%= updatedDate %>
+                                        <p class="my-1 text-sm max-sm:text-xs">Last entrance / update: <%= updatedDate %>
                                         </p>
                                         <form class="text-start mt-2" method="post" enctype="multipart/form-data">
                                             <div class="my-1">
                                                 <input type="text" name="firstName"
                                                     class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
-                                                    value="<%= user.firstName %>">
+                                                    value="<%= user.firstName %>"
+                                                    placeholder="Firsname">
                                             </div>
                                             <div class="my-1">
                                                 <input type="text" name="lastName"
                                                     class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
-                                                    value="<%= user.lastName %>">
+                                                    value="<%= user.lastName %>"
+                                                    placeholder="Lastname">
                                             </div>
                                             <div class="my-1">
                                                 <input type="file" name="image"
@@ -41,12 +43,14 @@
                                             <div class="my-1">
                                                 <input type="text" name="email"
                                                     class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
-                                                    value="<%= user.email %>">
+                                                    value="<%= user.email %>"
+                                                    placeholder="Email">
                                             </div>
                                             <div class="my-1">
                                                 <input type="text" name="userName"
                                                     class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
-                                                    value="<%= user.userName %>">
+                                                    value="<%= user.userName %>"
+                                                    placeholder="Username">
                                             </div>
                                             <div class="my-1">
                                                 <input type="password" name="password"
