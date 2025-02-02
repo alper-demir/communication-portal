@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <%- include('../partials/head') %>
-
+<head>
+    <style>
+        section:last-child {
+            border: none;
+        }
+    </style>
+</head>
     <body>
+
         <div class="flex">
             <%- include('../partials/side') %>
 
@@ -13,7 +20,8 @@
                             <div class="w-2/3 max-lg:w-3/4 break-words max-sm:w-5/6 max-md:text-xs max-lg:text-sm">
 
                                 <div class="mx-auto p-2 mt-5">
-                                    <h4 class="font-bold text-2xl max-lg:text-xl max-md:text-lg dark:text-slate-500 break-words">
+                                    <h4
+                                        class="font-bold text-2xl max-lg:text-xl max-md:text-lg dark:text-slate-500 break-words">
                                         <%= comments[0].topic.title %>
                                     </h4>
                                     <span class="text-xs dark:text-[#92959E] max-sm:text-[0.65rem]">
@@ -25,10 +33,10 @@
                                 <div class="border-2 border-indigo-400 dark:border-[#444654] rounded break-all">
                                     <% for( let index=0; index < comments.length; index++ ) { %>
                                         <section
-                                            class="flex justify-center border-b-2 border-indigo-400 rounded dark:border-[#444654]">
+                                            class="flex justify-center border-b-2 border-indigo-400 dark:border-[#444654]">
                                             <aside
                                                 class="border-r-2 border-indigo-400 p-8 text-center min-w-fit dark:border-[#444654] max-md:p-4 max-sm:p-2 max-sm:pt-4">
-                                                <div class="flex flex-col items-center">
+                                                <div class="flex flex-col items-center w-32 max-sm:w-[90px]">
                                                     <a href="/user/<%= comments[index].user.id %>">
                                                         <img src="../../public/images/<%= comments[index].user.image %>"
                                                             alt=""
@@ -47,33 +55,71 @@
                                             </aside>
                                             <div class="flex flex-col w-full dark:text-[#92959E]">
                                                 <div
-                                                    class="border-b-2 border-indigo-400 text-end flex justify-between p-2 items-center dark:border-[#444654] text-xs max-md:text-[0.65rem]">
+                                                    class="border-b-2 border-indigo-400 text-end flex justify-between p-2 items-center dark:border-[#444654] text-xs max-md:text-[0.65rem] max-sm:p-1">
                                                     <div>
                                                         <%= comments[index].createdAt.toLocaleString() %>
                                                     </div>
                                                     <div>#<%= index + 1 %>
                                                     </div>
                                                 </div>
-                                                <div class="p-5 max-md:p-3">
-                                                    <%- comments[index].content %>
+                                                <div class="p-5 pb-14 max-md:p-3 max-md:pb-12 relative h-full max-md:text-xs max-lg:text-sm">
+                                                    <span id="orgContent<%= index %>"><%- comments[index].content
+                                                            %></span>
+                                                    <% if (userId==comments[index].userId) { %>
+                                                        <div
+                                                            class="absolute bottom-1 right-2 max-sm:text-[0.65rem] flex flex-col items-end">
+                                                            <div>
+                                                                <button class="underline"
+                                                                    onclick="editComment(<%= index %>)">
+                                                                    Edit
+                                                                </button>
+                                                            </div>
+                                                            <% function formatDate(orgDate) {
+                                                                const date = new Date(orgDate)
+                                                                const day = date.getDate()
+                                                                const month = date.toLocaleString('en-GB', { month: 'long' })
+                                                                const year = date.getFullYear()
+                                                                const formattedDate = `${day} ${month} ${year} - ${date.toLocaleTimeString("tr-TR")}`
+                                                                return formattedDate
+                                                            } %>
+                                                            <% if (comments[index].editedDate) { %>
+                                                                <div>
+                                                                    <p>Last edit: <%= formatDate(comments[index].editedDate) %></p>
+                                                                </div>
+                                                            <% } %>
+                                                           
+
+                                                        </div>
+                                                        <div id="editArea<%= index %>" class="hidden my-2">
+                                                            <textarea rows="10" id="editText<%= index %>"
+                                                                class="w-full h-full resize-none p-2 rounded bg-gray-200 dark:bg-[#40414F]"><%- comments[index].content %></textarea>
+
+                                                            <button type="submit"
+                                                                onclick="saveEdit(<%= comments[index].id %>,<%= index %>)"
+                                                                class="px-2 py-1 bg-blue-800 rounded text-white hover:translate-x-[2px] transition-all">Save</button>
+                                                        </div>
+                                                        <% } %>
                                                 </div>
                                             </div>
 
                                         </section>
                                         <% } %>
 
-                                        <div>
-                                            <% if (typeof isAuth !="undefined" ) { %>
-                                                <form method="post" class="mx-auto p-2">
-                                                    <input type="hidden" name="topicid" value="<%= comments[0].topic.id %>">
-                                                    <div class="relative my-2">
-                                                        <textarea id="editor" name="content" placeholder="Comment"></textarea>
-                                                    </div>
-                                                    <button type="submit"
-                                                        class="px-2 py-1 bg-blue-800 rounded text-white hover:-translate-y-[2px] transition-all">Comment</button>
-                                                </form>
-                                                <% } %>
-                                        </div>
+
+                                            <div>
+                                                <% if (typeof isAuth !="undefined" ) { %>
+                                                    <form method="post" class="mx-auto p-2">
+                                                        <input type="hidden" name="topicid"
+                                                            value="<%= comments[0].topic.id %>">
+                                                        <div class="relative my-2">
+                                                            <textarea id="editor" name="content"
+                                                                placeholder="Comment"></textarea>
+                                                        </div>
+                                                        <button type="submit"
+                                                            class="px-2 py-1 bg-blue-800 rounded text-white hover:-translate-y-[2px] transition-all">Comment</button>
+                                                    </form>
+                                                    <% } %>
+                                            </div>
 
                                 </div>
                             </div>
@@ -85,4 +131,13 @@
         </div>
     </body>
     <%- include('../partials/ck-editor') %>
+        <script src="../../public/js/editComment.js"></script>
+
+        <script>
+            function formatDate(date) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+                return new Date(date).toLocaleDateString(undefined, options);
+            }
+        </script>
+
 </html>

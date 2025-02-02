@@ -5,9 +5,11 @@
     <body>
         <div class="flex">
             <%- include('../partials/side') %>
-            <input type="hidden" id="userId" value="<%= userId %>">
-            <input type="hidden" id="roomId" value="<%= roomId %>">
-            <input type="hidden" id="friendId" value="<%= friendId %>">
+                <input type="hidden" id="userId" value="<%= userId %>">
+                <input type="hidden" id="roomId" value="<%= roomId %>">
+                <input type="hidden" id="friendId" value="<%= friendId %>">
+                <input type="hidden" class="bg-teal-500">
+                <input type="hidden" class="bg-gray-200">
                 <div
                     class="w-full max-lg:ml-40 max-sm:ml-0 ml-60 p-2 min-h-screen max-lg:text-sm dark:bg-[#343541] dark:text-[#92959E]">
                     <%- include('../partials/navbar2') %>
@@ -15,10 +17,12 @@
                             <div class="w-1/2 max-lg:w-3/4 break-all max-sm:w-5/6 max-md:text-xs max-lg:text-sm">
 
                                 <div class="flex flex-col justify-center h-[70vh] relative">
-                                    <div class="bg-gray-200 dark:bg-[#5c5f75] bg-opacity-60 dark:bg-opacity-20 py-8 overflow-y-auto rounded h-full" id="sc">
-        
+                                    <p class="mb-2">you are chatting with <a href="/user/<%= friendId %>"><%= name %></a></p>
+                                    <div class="bg-gray-200 dark:bg-[#5c5f75] bg-opacity-60 dark:bg-opacity-20 py-8 overflow-y-auto rounded h-full"
+                                        id="sc">
+
                                         <div id="messageList"></div>
-                                        
+
                                     </div>
                                     <form id="messageForm" class="flex mt-1">
                                         <input id="messageInput" type="text"
@@ -53,10 +57,24 @@
             socket.emit('joinRoom', roomId);
         });
 
+        socket.on('updateMessageStatus', ({ roomId }) => {
+            axios.post("/api/update-message-status", {
+                roomId: roomId,
+                receiverId: document.querySelector("#userId").value
+            })
+        });
+
         socket.on('message', (data) => {
             const messageList = document.getElementById("messageList")
             const div = document.createElement("div")
             const p = document.createElement("p")
+            console.log(data)
+            if (data.length == 2) {
+                axios.post("/api/update-message-status", {
+                    roomId: data.roomId,
+                    receiverId: data.receiverId
+                })
+            }
 
             if (data.sender == document.getElementById("userId").value) {
                 div.className = "flex justify-end px-4"
@@ -66,6 +84,7 @@
                 const img = document.createElement("img")
                 img.src = "../../public/images/<%= friendImage %>"
                 img.className = "w-8 h-8 rounded-full object-cover mr-1 ring-1 ring-orange-500"
+                img.style.minWidth = "2rem"
                 div.appendChild(img)
             }
             p.className = "bg-indigo-500 dark:bg-[#444654] text-white py-1 px-3 inline-block rounded-lg mb-4 max-w-[20rem]"
@@ -85,7 +104,8 @@
                 const messageData = {
                     message: messageInput.value.trim(),
                     roomId: roomId,
-                    sender: userId
+                    sender: userId,
+                    receiverId: friendId
                 }
                 console.log("message:", messageData.message)
                 socket.emit('message', messageData);

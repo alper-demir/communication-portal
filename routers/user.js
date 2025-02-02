@@ -9,58 +9,13 @@ const Messages = require("../models/messages")
 const auth = require("../middlewares/auth")
 const { Op } = require("sequelize")
 const bcrypt = require("bcrypt")
+const imageUpload = require("../public/js/image-upload")
 
 router.get("/", (req, res) => {
-    res.render("auth/login", {
-        title: "Login",
-    })
-})
-
-router.post("/", async (req, res) => {
-    const { email, password } = req.body
-    try {
-        const user = await User.findOne({
-            where: {
-                email: email
-            }
-        })
-        if (!user) {
-            return res.render("auth/login", {
-                message: {
-                    text: "Please check your informations",
-                    type: "Warning"
-                },
-                title: "Login",
-                email: email,
-                password: password
-            }
-            )
-        }
-        const compare = await bcrypt.compare(password, user.password)
-        if (!compare) {
-            return res.render("auth/login", {
-                message: {
-                    text: "Password is wrong",
-                    type: "Warning"
-                },
-                title: "Login",
-                email: email,
-                password: password
-
-            }
-            )
-        }
-        req.session.isAuth = true
-        req.session.image = user.image
-        req.session.username = user.userName
-        req.session.userid = user.id
-        console.log("auth: " + req.session.isAuth)
-        await User.update({ online: true }, { where: { id: user.id } })
+    if (req.session.isAuth) {
         return res.redirect("/topics")
     }
-    catch (error) {
-        console.log(error)
-    }
+    return res.redirect("/auth/login")
 })
 
 router.get("/topics", async (req, res) => {
@@ -93,7 +48,7 @@ router.get("/topics", async (req, res) => {
     })
 })
 
-router.post("/topics", async (req, res) => {
+router.post("/topics", auth, async (req, res) => {
     const { title, content } = req.body
     console.log(req.body)
     try {
@@ -117,43 +72,52 @@ router.post("/topics", async (req, res) => {
 
 router.get("/topic/:id", async (req, res) => {
     const topicId = req.params.id
+    try {
+        let visitedTopics = req.cookies.visited_topics || [];
+        if (!visitedTopics.includes(topicId)) {
+            Topic.increment('views', { where: { id: topicId } });
+            visitedTopics.push(topicId);
+            res.cookie('visited_topics', visitedTopics, { maxAge: 1000 * 60 * 60 }); // 60 min
+        }
 
-    let visitedTopics = req.cookies.visited_topics || [];
-    if (!visitedTopics.includes(topicId)) {
-        Topic.increment('views', { where: { id: topicId } });
-        visitedTopics.push(topicId);
-        res.cookie('visited_topics', visitedTopics, { maxAge: 1000 * 60 * 60 }); // 60 min
+        const comments = await Comment.findAll({
+            where: {
+                topicId: topicId
+            },
+            include: [
+                {
+                    model: Topic, include: {
+                        model: User,
+                        attributes: ['firstName', 'lastName',]
+                    },
+                    attributes: ['title', 'createdAt', 'id']
+                },
+                { model: User, attributes: ['userName', 'image', 'firstName', 'lastName', 'id'] }
+            ]
+        })
+        if (comments.length < 1) {
+            res.redirect("/topics")
+        }
+        console.log(comments)
+        const date = new Date(comments[0].topic.createdAt)
+        const day = date.getDate()
+        const month = date.toLocaleString('en-GB', { month: 'long' })
+        const year = date.getFullYear()
+        const formattedDate = `${day} ${month} ${year} - ${date.toLocaleTimeString("tr-TR")}`
+        res.render("user/topic-details", {
+            title: comments[0].topic.title,
+            comments: comments,
+            date: formattedDate
+        })
     }
 
-    const comments = await Comment.findAll({
-        where: {
-            topicId: topicId
-        },
-        include: [
-            {
-                model: Topic, include: {
-                    model: User,
-                    attributes: ['firstName', 'lastName',]
-                },
-                attributes: ['title', 'createdAt', 'id']
-            },
-            { model: User, attributes: ['userName', 'image', 'firstName', 'lastName','id'] }
-        ]
-    })
-    console.log(comments)
-    const date = new Date(comments[0].topic.createdAt)
-    const day = date.getDate()
-    const month = date.toLocaleString('en-GB', { month: 'long' })
-    const year = date.getFullYear()
-    const formattedDate = `${day} ${month} ${year} - ${date.toLocaleTimeString("tr-TR")}`
-    res.render("user/topic-details", {
-        title: comments[0].topic.title,
-        comments: comments,
-        date: formattedDate
-    })
+    catch (err) {
+        console.log(err)
+    }
+
 })
 
-router.post("/topic/:id", async (req, res) => {
+router.post("/topic/:id", auth, async (req, res) => {
     const { content, topicid } = req.body
 
     try {
@@ -414,12 +378,13 @@ router.get("/chat/:friendId", auth, async (req, res) => {
     const friendId = req.params.friendId
     const userId = req.session.userid;
     const roomId = [userId, friendId].sort().join("-");
-    const friend = await User.findByPk(friendId, { attributes: ['image', 'id'] })
+    const friend = await User.findByPk(friendId, { attributes: ['image', 'id', 'firstName'] })
     res.render("user/chat", {
         title: roomId,
         roomId,
         friendImage: friend.image,
-        friendId: friend.id
+        friendId: friend.id,
+        name: friend.firstName
     })
 })
 
@@ -454,22 +419,42 @@ router.get("/api/messages/:room", async (req, res) => {
 })
 
 router.post("/api/messages-notify/:user", async (req, res) => {
-    const id = req.params.user
+    const id = req.params.user;
     try {
-        const notification = await Messages.findAll({
+        const notifications = await Messages.findAll({
             where: {
                 receiverId: id,
-                isRead: false
+                isRead: false,
             },
-        })
-        if (notification) {
-            res.status(200).send(notification)
-        }
+            include: {
+                model: User,
+                as: "friend",
+                attributes: ['id', 'userName']
+            },
+        });
+
+        const roomCounts = {};
+        notifications.forEach((notification) => {
+            const roomId = notification.roomId;
+            if (roomCounts[roomId]) {
+                roomCounts[roomId]++;
+            } else {
+                roomCounts[roomId] = 1;
+            }
+        });
+
+        const result = Object.keys(roomCounts).map((roomId) => ({
+            roomId: roomId,
+            count: roomCounts[roomId],
+            senderId: notifications.find((n) => n.roomId === roomId)?.senderId,
+            friend: notifications.find((n) => n.roomId === roomId)?.friend,
+        }));
+
+        res.status(200).send(result);
+    } catch (error) {
+        console.log("notification error" + error);
     }
-    catch (error) {
-        console.log("notification error" + error)
-    }
-})
+});
 
 router.get("/search", async (req, res) => {
     const key = req.query.q
@@ -539,7 +524,7 @@ router.get("/popular-topics", async (req, res) => {
     }
 })
 
-router.post("/popular-topics", async (req, res) => {
+router.post("/popular-topics", auth, async (req, res) => {
     const { title, content } = req.body
     console.log(req.body)
     try {
@@ -595,7 +580,7 @@ router.get("/new-topics", async (req, res) => {
     }
 })
 
-router.post("/new-topics", async (req, res) => {
+router.post("/new-topics", auth, async (req, res) => {
     const { title, content } = req.body
     console.log(req.body)
     try {
@@ -614,6 +599,133 @@ router.post("/new-topics", async (req, res) => {
     }
     catch (error) {
         console.log("Error occured during topic creation:", error)
+    }
+})
+
+router.post("/api/update-message-status", async (req, res) => {
+    const { roomId, receiverId } = req.body
+    console.log("message update : " + roomId, receiverId)
+    try {
+        await Messages.update({ isRead: true }, {
+            where: {
+                roomId,
+                receiverId,
+            }
+        })
+    }
+    catch (error) {
+        console.log(error)
+    }
+
+})
+
+router.get("/profile", auth, async (req, res) => {
+    const userId = req.session.userid
+    const message = req.session.message
+    delete req.session.message
+    try {
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        })
+        let dateString = ''
+        if (user) {
+            const date = new Date(user.createdAt)
+            const updatedDate = new Date(user.updatedAt)
+            dateString = date.toLocaleString()
+            updatedDateString = updatedDate.toLocaleString()
+        }
+        res.render("user/profile-edit", {
+            title: "Profile Edit",
+            user,
+            date: dateString,
+            updatedDate: updatedDateString,
+            message
+        })
+
+    }
+    catch (error) {
+        console.log(error)
+    }
+
+})
+
+router.post("/profile", imageUpload.upload.single("image"), async (req, res) => {
+    const { firstName, lastName, email, userName, password, passwordConfirm } = req.body
+    const userId = req.session.userid
+
+    try {
+
+        const user = await User.findOne({
+            where: {
+                id: userId
+            },
+            attributes: ['password', 'image']
+        })
+
+        let image = ''
+        if (req.file) {
+            image = req.file.filename;
+        }
+        else {
+            image = user.image
+        }
+
+        const compare = await bcrypt.compare(passwordConfirm, user.password)
+
+        if (compare) {
+            const update = await User.update({
+                firstName,
+                lastName,
+                email,
+                userName,
+                password: await bcrypt.hash(password, 10),
+                image,
+            }, {
+                where: {
+                    id: userId
+                }
+            })
+            if (update) {
+                req.session.image = image
+                req.session.message = "Profile updated successfully!"
+            }
+
+        }
+        else {
+            req.session.message = "An error occurred while updating the profile."
+        }
+        res.redirect("/profile")
+
+
+    }
+    catch (error) {
+        console.log(error)
+    }
+})
+
+router.post("/api/edit-comment", async (req, res) => {
+    const { editedText, commentId } = req.body
+    console.log(editedText)
+    console.log(commentId)
+    //veriler şu an geliyor veritabanına kaydını yap.
+
+    try {
+        let date = new Date()
+        let editedDate = date.toString()
+        const editComment = await Comment.update({ content: editedText, isEdited: true, editedDate, }, {
+            where: {
+                id: commentId,
+            }
+        })
+        if (editComment) {
+            res.status(200).send({ message: "Comment edited successfully" })
+        }
+    }
+    catch (error) {
+        res.status(404).send({ message: "An error occured during editing" })
+        console.log("An error occured during text edit: " + error)
     }
 })
 

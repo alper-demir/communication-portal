@@ -15,15 +15,23 @@
                         <a href="/">Commtal</a>
                     </div>
                     <% if (typeof isAuth !="undefined" && isAuth) { %>
-                        <div class="flex items-center justify-center">
-                            <a href="/auth/logout" class="focus:ring-4 focus:outline-none
-                    focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 transition-all">
-                                Logout
-                            </a>
+                        <div class="flex items-center justify-center relative">
                             <% if (typeof image !="undefined" ) { %>
                                 <img src="../../public/images/<%= image %>" alt=""
-                                    class=" h-12 w-12  rounded-full ml-3 ring-2 ring-cyan-400 object-cover dark:ring-sky-700">
+                                    class=" h-12 w-12  rounded-full ml-3 ring-2 ring-cyan-400 object-cover dark:ring-sky-700 cursor-pointer"
+                                    onclick="dropDownMenu()">
                                 <% } %>
+                                    <div class="absolute top-14 -left-2 text-center hidden font-medium text-sm bg-gray-200 dark:bg-[#5c5f75] bg-opacity-60 dark:bg-opacity-20 py-2 px-4 rounded-xl"
+                                        id="dropmenu">
+                                        <ul>
+                                            <li class="p-1 hover:bg-gray-200 dark:hover:bg-[#5c5f75] hover:rounded-md">
+                                                <a href="/profile">Settings</a>
+                                            </li>
+                                            <li class="p-1 hover:bg-gray-200 dark:hover:bg-[#5c5f75] hover:rounded-md">
+                                                <a href="/auth/logout">Logout</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                         </div>
                         <% } else{ %>
                             <div class="flex">
@@ -49,6 +57,7 @@
 <script>
     let orgside = document.getElementById("orgside")
     let container = document.getElementById("side-container")
+    let dropmenu = document.getElementById("dropmenu")
     function showSide() {
         if (document.querySelector('html').classList.contains('dark')) {
             container.style.backgroundColor = '#202123'
@@ -65,4 +74,13 @@
             container.style.backgroundColor = 'tranparent'
         }
     }
+
+    const dropDownMenu = () => {
+        if (dropmenu.classList.contains("hidden")) {
+            dropmenu.classList.remove("hidden")
+        } else {
+            dropmenu.classList.add("hidden")
+        }
+    }
+
 </script>

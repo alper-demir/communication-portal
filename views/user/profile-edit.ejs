@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+
+    <body>
+        <div class="flex">
+            <%- include('../partials/side') %>
+
+                <div
+                    class="w-full max-lg:ml-40 max-sm:ml-0 ml-60 p-2 min-h-screen max-lg:text-sm dark:bg-[#343541] dark:text-[#92959E]">
+                    <%- include('../partials/navbar2') %>
+                        <main class="flex flex-col justify-center items-center h-[80vh]">
+                            <div class="w-2/3 max-lg:w-3/4 break-words max-sm:w-5/6 max-md:text-xs max-lg:text-sm">
+
+                                <div class="flex flex-col items-center justify-center text-center">
+                                    <div
+                                        class="border-2 border-indigo-400 p-6 rounded shadow-md text-gray-500 dark:text-[#92959E] dark:border-[#444654]">
+
+                                        <img src="/public/images/<%= user.image %>" alt=""
+                                            class="h-32 w-32 max-sm:w-24 max-sm:h-24 max-lg:w-28 max-lg:h-28 rounded-full object-cover my-3 inline-block">
+                                        <p class="my-1 text-sm max-sm:text-xs">Your account has been created at <%= date %>
+                                        </p>
+                                        <p class="my-1 text-sm max-sm:text-xs">Last entrance / update: <%= updatedDate %>
+                                        </p>
+                                        <form class="text-start mt-2" method="post" enctype="multipart/form-data">
+                                            <div class="my-1">
+                                                <input type="text" name="firstName"
+                                                    class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
+                                                    value="<%= user.firstName %>"
+                                                    placeholder="Firsname">
+                                            </div>
+                                            <div class="my-1">
+                                                <input type="text" name="lastName"
+                                                    class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
+                                                    value="<%= user.lastName %>"
+                                                    placeholder="Lastname">
+                                            </div>
+                                            <div class="my-1">
+                                                <input type="file" name="image"
+                                                    class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
+                                                    accept=".jpg,.jpeg">
+                                            </div>
+                                            <div class="my-1">
+                                                <input type="text" name="email"
+                                                    class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
+                                                    value="<%= user.email %>"
+                                                    placeholder="Email">
+                                            </div>
+                                            <div class="my-1">
+                                                <input type="text" name="userName"
+                                                    class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
+                                                    value="<%= user.userName %>"
+                                                    placeholder="Username">
+                                            </div>
+                                            <div class="my-1">
+                                                <input type="password" name="password"
+                                                    class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
+                                                    placeholder="New Password">
+                                            </div>
+
+                                            <div class="my-1">
+                                                <input type="password" name="passwordConfirm"
+                                                    class="p-2 w-full dark:outline-white outline-indigo-500 outline-1 border-2 rounded bg-transparent"
+                                                    placeholder="Current password for confirmation">
+                                            </div>
+
+                                            <div class="mt-3 text-right w-full">
+                                                <button type="submit"
+                                                    class="px-3 py-1 dark:bg-transparent dark:text-white rounded border-2 dark:border-white focus:border-indigo-500">Save</button>
+                                            </div>
+                                        </form>
+                                        <% if (message) { %>
+                                            <p class="mt-2"><%= message %></p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                        <%- include('../partials/footer') %>
+
+                </div>
+        </div>
+    </body>
+
+</html>
